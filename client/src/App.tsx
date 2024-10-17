@@ -1,11 +1,16 @@
-import { Button } from "@/components/ui/button";
+import {Route, Routes } from "react-router-dom";
 import "./App.css";
+import Home from "./containers/Home";
+import Login from "./containers/Login";
+import Register from "./containers/Register";
 
 function App() {
   return (
-    <>
-      <Button>Click me</Button>
-    </>
+    <Routes>
+      <Route path="/" element={<Home />}></Route>
+      <Route path="login" element={<Login />}></Route>
+      <Route path="register" element={<Register />}></Route>
+    </Routes>
   );
 }
 
