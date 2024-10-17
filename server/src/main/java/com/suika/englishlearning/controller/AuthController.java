@@ -55,7 +55,7 @@ public class AuthController {
             return new ResponseEntity<>("Invalid email format", HttpStatus.BAD_REQUEST);
         }
         if(userRepository.existsByEmail(registerDto.getEmail())) {
-            return new ResponseEntity<>("Email number is already in the system", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Email address is already in the system", HttpStatus.BAD_REQUEST);
         }
         UserEntity user = new UserEntity();
         user.setEmail(registerDto.getEmail());
