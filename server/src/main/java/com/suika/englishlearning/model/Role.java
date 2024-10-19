@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Setter
 @Getter
 @Entity
@@ -13,10 +15,11 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NotNull
     private String name;
 
-    @OneToOne(mappedBy = "role")
-    private UserEntity user;
+    @OneToMany(mappedBy = "role")
+    private Set<UserEntity> users;
 
     public Role() {
     }

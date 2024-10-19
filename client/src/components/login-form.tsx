@@ -11,9 +11,10 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 
 interface LoginResponse {
-  userName: string;
+  user: string;
   email: string;
   role: string;
   tokenType: string;
@@ -77,10 +78,19 @@ function LoginForm() {
           </div>
         </form>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex flex-col">
         <Button className="w-full" onClick={handleSubmit}>
           Login
         </Button>
+        <Separator className="my-4" />
+        <div className="grid grid-cols-2 gap-4 w-full">
+            <Button variant="outline" className="w-full" onClick={() => window.location.href = "https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=http://localhost:8080/api/v1/auth/googlegrantcode&response_type=code&client_id=316346812823-emelg3dhg9a9tiis7b5bfjnk8clv8mc9.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&access_type=offline"}>
+            Sign in with Google
+            </Button>
+          <Button variant="outline" className="w-full">
+            Sign in with Microsoft
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );

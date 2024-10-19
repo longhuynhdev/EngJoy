@@ -1,5 +1,7 @@
 package com.suika.englishlearning.service;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.suika.englishlearning.exception.IncorrectPasswordException;
 import com.suika.englishlearning.exception.InvalidEmailException;
 import com.suika.englishlearning.model.Role;
@@ -10,13 +12,20 @@ import com.suika.englishlearning.model.dto.auth.RegisterDto;
 import com.suika.englishlearning.repository.RoleRepository;
 import com.suika.englishlearning.repository.UserRepository;
 import com.suika.englishlearning.security.JWTGenerator;
+import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Service
@@ -26,6 +35,11 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWTGenerator jwtGenerator;
+
+    @Value("${googleClientId}")
+    String clientId;
+    @Value("${googleClientSecret}")
+    String clientSecret;
 
     public AuthService(AuthenticationManager authenticationManager, UserRepository userRepository,
                        RoleRepository roleRepository, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator) {
@@ -50,7 +64,7 @@ public class AuthService {
             throw new InvalidEmailException("Email address already in use");
         }
         UserEntity user = new UserEntity();
-        user.setUserName(registerDto.getUserName());
+        user.setName(registerDto.getName());
         user.setEmail(registerDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
@@ -60,6 +74,70 @@ public class AuthService {
 
         userRepository.save(user);
         return "User registered successfully";
+    }
+
+    public AuthDto processGrantCode(String code) {
+        String accessToken = getOauthAccessTokenGoogle(code);
+        UserEntity googleUser = getProfileDetailsGoogle(accessToken);
+        Optional<UserEntity> userOptional = userRepository.findByEmail(googleUser.getEmail());
+
+        UserEntity user;
+        if (userOptional.isEmpty()) {
+            RegisterDto registerDto = new RegisterDto(googleUser.getName(), googleUser.getEmail(), googleUser.getPassword());
+            register(registerDto);
+            user = userRepository.findByEmail(googleUser.getEmail()).orElseThrow(() -> new RuntimeException("User registration failed"));
+        } else {
+            user = userOptional.get();
+        }
+
+        // Directly set the authentication context for Google users
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), null, user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtGenerator.generateToken(authentication);
+
+        return new AuthDto(user.getName(), user.getEmail(), user.getRole().getName(), token);
+    }
+
+    private UserEntity getProfileDetailsGoogle(String accessToken) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setBearerAuth(accessToken);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(httpHeaders);
+
+        String url = "https://www.googleapis.com/oauth2/v2/userinfo";
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+        JsonObject jsonObject = new Gson().fromJson(response.getBody(), JsonObject.class);
+
+        UserEntity user = new UserEntity();
+        user.setEmail(jsonObject.get("email").toString().replace("\"", ""));
+        user.setName(jsonObject.get("name").toString().replace("\"", ""));
+        user.setPassword(UUID.randomUUID().toString());
+        return user;
+    }
+
+    private String getOauthAccessTokenGoogle(String code) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("code", code);
+        params.add("redirect_uri", "http://localhost:8080/api/v1/auth/googlegrantcode");
+        params.add("client_id", clientId);
+        params.add("client_secret", clientSecret);
+        params.add("scope", "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile");
+        params.add("scope", "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email");
+        params.add("scope", "openid");
+        params.add("grant_type", "authorization_code");
+
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, httpHeaders);
+
+        String url = "https://oauth2.googleapis.com/token";
+        String response = restTemplate.postForObject(url, requestEntity, String.class);
+        JsonObject jsonObject = new Gson().fromJson(response, JsonObject.class);
+
+        return jsonObject.get("access_token").toString().replace("\"", "");
     }
 
     public AuthDto login(LoginDto loginDto) {
@@ -79,7 +157,7 @@ public class AuthService {
             UserEntity user = userRepository.findByEmail(loginDto.getEmail()).get();
             String role = user.getRole().getName();
 
-            return new AuthDto(user.getUserName(), user.getEmail(),role,token);
+            return new AuthDto(user.getName(), user.getEmail(),role,token);
 
         } catch (Exception e) {
             throw new IncorrectPasswordException("Incorrect email address or password");
