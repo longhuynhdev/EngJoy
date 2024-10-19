@@ -36,7 +36,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         try {
             AuthDto response = authService.login(loginDto);
-            AuthResponseDto responseDto = new AuthResponseDto(response.getUserName(), response.getEmail(), response.getRole());
+            AuthResponseDto responseDto = new AuthResponseDto(response.getName(), response.getEmail(), response.getRole());
             ResponseCookie cookie = ResponseCookie.from("token", response.getAccessToken())
                     .httpOnly(true)
                     .secure(true)
@@ -52,6 +52,23 @@ public class AuthController {
         } catch (IncorrectPasswordException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
+    }
+
+    // reference: https://medium.com/@sallu-salman/implementing-sign-in-with-google-in-spring-boot-application-5f05a34905a8
+    @GetMapping("googlegrantcode")
+    public ResponseEntity<?> grantCode(@RequestParam("code") String code, @RequestParam("scope") String scope, @RequestParam("authuser") String authUser, @RequestParam("prompt") String prompt) {
+        AuthDto response = authService.processGrantCode(code);
+        AuthResponseDto responseDto = new AuthResponseDto(response.getName(), response.getEmail(), response.getRole());
+        ResponseCookie cookie = ResponseCookie.from("token", response.getAccessToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(24 * 60 * 60)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(responseDto);
     }
 
     @ExceptionHandler({InvalidEmailException.class, IncorrectPasswordException.class})
