@@ -1,5 +1,6 @@
 # Intro2se
 
-//TODO: Change the return type of the method in the Service class from ResponseEntity to a more specific type. Solution: Create a custom response class and a custom exception
 
-//DONE:
+//TODO: 
+
+//DONE: Changed the return type of the method in the Service class to a custom response class and handled custom exception. Commit ID: []
