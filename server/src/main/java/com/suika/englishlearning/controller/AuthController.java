@@ -1,33 +1,66 @@
 package com.suika.englishlearning.controller;
 
+import com.suika.englishlearning.exception.IncorrectPasswordException;
+import com.suika.englishlearning.exception.InvalidEmailException;
+import com.suika.englishlearning.model.dto.auth.AuthDto;
 import com.suika.englishlearning.model.dto.auth.AuthResponseDto;
 import com.suika.englishlearning.model.dto.auth.LoginDto;
 import com.suika.englishlearning.model.dto.auth.RegisterDto;
 import com.suika.englishlearning.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
     private final AuthService authService;
 
-    @Autowired
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
     @PostMapping("register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
-        return authService.register(registerDto);
+        try {
+            String response = authService.register(registerDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (InvalidEmailException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PostMapping("login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto) {
-        return authService.login(loginDto);
+    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
+        try {
+            AuthDto response = authService.login(loginDto);
+            AuthResponseDto responseDto = new AuthResponseDto(response.getUserName(), response.getEmail(), response.getRole());
+            ResponseCookie cookie = ResponseCookie.from("token", response.getAccessToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .maxAge(24 * 60 * 60)
+                    .build();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .body(responseDto);
+        } catch (InvalidEmailException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (IncorrectPasswordException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @ExceptionHandler({InvalidEmailException.class, IncorrectPasswordException.class})
+    public ResponseEntity<String> handleAuthExceptions(RuntimeException e) {
+        if (e instanceof InvalidEmailException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } else if (e instanceof IncorrectPasswordException) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
     }
 }

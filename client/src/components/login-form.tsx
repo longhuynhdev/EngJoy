@@ -12,6 +12,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+interface LoginResponse {
+  userName: string;
+  email: string;
+  role: string;
+  tokenType: string;
+}
+
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +35,7 @@ function LoginForm() {
     });
 
     if (response.ok) {
-      const data = await response.json();
+      const data: LoginResponse = await response.json();
       console.log("Login successful:", data);
       //TODO Handle successful login (e.g., redirect, store token, etc.)
     } else {

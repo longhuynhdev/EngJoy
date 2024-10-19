@@ -3,7 +3,6 @@ package com.suika.englishlearning.security;
 import com.suika.englishlearning.model.Role;
 import com.suika.englishlearning.model.UserEntity;
 import com.suika.englishlearning.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -13,14 +12,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collections;
+
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
-    @Autowired
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -29,12 +27,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
-        return new User(userEntity.getEmail(), userEntity.getPassword(),mapRolesToAuthorities(userEntity.getRoles()));
+        return new User(userEntity.getEmail(), userEntity.getPassword(), mapRoleToAuthorities(userEntity.getRole()));
     }
 
-    private Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles) {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+    private Collection<GrantedAuthority> mapRoleToAuthorities(Role role) {
+        return Collections.singletonList(new SimpleGrantedAuthority(role.getName()));
     }
 }

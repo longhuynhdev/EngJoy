@@ -1,6 +1,7 @@
 package com.suika.englishlearning.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,9 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+
+    @OneToOne(mappedBy = "role")
+    private UserEntity user;
 
     public Role() {
     }
