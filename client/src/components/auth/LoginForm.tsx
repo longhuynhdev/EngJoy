@@ -9,13 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -70,9 +64,6 @@ const LoginForm = () => {
     <Card>
       <CardHeader>
         <CardTitle>Login</CardTitle>
-        <CardDescription>
-          Log into your account with your credentials
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
         <Form {...form}>
@@ -122,6 +113,7 @@ const LoginForm = () => {
             <Separator className="my-4" />
             <div className="grid grid-cols-2 gap-4 w-full">
               <Button
+                type="button"
                 variant="outline"
                 className="w-full"
                 onClick={() =>
@@ -129,10 +121,10 @@ const LoginForm = () => {
                     "https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=http://localhost:8080/api/v1/auth/googlegrantcode&response_type=code&client_id=316346812823-emelg3dhg9a9tiis7b5bfjnk8clv8mc9.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&access_type=offline")
                 }
               >
-                Sign in with Google
+                Continue with Google
               </Button>
-              <Button variant="outline" className="w-full">
-                Sign in with Microsoft
+              <Button type="button" variant="outline" className="w-full">
+                Continue with Microsoft
               </Button>
             </div>
             <Button className="w-full">Sign in</Button>

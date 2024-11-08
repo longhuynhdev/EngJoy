@@ -9,16 +9,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -47,7 +42,7 @@ const RegisterForm = () => {
   });
 
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
-    handleNavigate();
+    // handleNavigate();
   };
 
   const handleNavigate = () => {
@@ -60,7 +55,6 @@ const RegisterForm = () => {
     <Card>
       <CardHeader>
         <CardTitle>Register</CardTitle>
-        <CardDescription>Sign up by adding the info bellow</CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
         <Form {...form}>
