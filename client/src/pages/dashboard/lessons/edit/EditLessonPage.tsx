@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -36,7 +36,6 @@ const formSchema = z.object({
 });
 
 const EditLessonPage = () => {
-  const { toast } = useToast();
   const { id } = useParams();
   const lesson = lessons.find((post) => String(post.id) === id);
 
@@ -53,9 +52,7 @@ const EditLessonPage = () => {
 
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
     console.log(data);
-    toast({
-      title: `Lesson: ${data.title} has been updated successfully`,
-    });
+    toast.success(`Lesson: ${data.title} has been updated successfully`);
   };
 
   return (
