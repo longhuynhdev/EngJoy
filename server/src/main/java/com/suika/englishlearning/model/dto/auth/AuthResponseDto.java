@@ -9,7 +9,6 @@ public class AuthResponseDto {
     private String name;
     private String email;
     private String role;
-    private String tokenType = "Bearer ";
 
     public AuthResponseDto(String name, String email, String role) {
         this.name = name;

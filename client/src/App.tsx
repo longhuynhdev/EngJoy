@@ -9,6 +9,7 @@ import HomePage from "./pages/home/HomePage";
 import DashboardLayout from "./layouts/DashboardLayout";
 import DashBoardPage from "./pages/dashboard/DashboardPage";
 import AdminLessonsPage from "./pages/dashboard/lessons/AdminLessonPage";
+import AddLessonPage from "./pages/dashboard/lessons/add/AddLessonPage";
 import EditLessonPage from "./pages/dashboard/lessons/edit/EditLessonPage";
 // Auth
 import AuthLayout from "./layouts/AuthLayout";
@@ -27,6 +28,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashBoardPage />} />
           <Route path="lessons" element={<AdminLessonsPage />} />
+          <Route path="lessons/add" element={<AddLessonPage />} />
           <Route path="lessons/edit/:id" element={<EditLessonPage />} />
         </Route>
 

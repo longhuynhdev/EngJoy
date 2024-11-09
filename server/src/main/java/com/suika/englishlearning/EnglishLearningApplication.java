@@ -12,7 +12,6 @@ import java.util.List;
 public class EnglishLearningApplication implements CommandLineRunner {
 
     private final RoleRepository roleRepository;
-
     public EnglishLearningApplication(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }

@@ -5,8 +5,8 @@ export interface Lesson {
   body: string;
   author: string;
   date: string;
-  category: "grammar" | "vocabulary" | "idioms" | "writing";
-  difficulty: "beginner" | "intermediate" | "advanced";
+  category: string[];
+  difficulty: string[];
   comments: LessonComment[];
 }
 

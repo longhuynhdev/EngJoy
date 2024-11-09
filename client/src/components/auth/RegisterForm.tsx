@@ -12,25 +12,27 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 
-const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Name is required",
-  }),
-  email: z.string().min(1, { message: "Email is required" }).email({
-    message: "Please enter a valid email",
-  }),
-  password: z.string().min(1, { message: "Password is required" }),
-  confirmPassword: z
-    .string()
-    .min(1, { message: "Confirm Password is required" }),
-});
+const formSchema = z
+  .object({
+    name: z.string().min(1, {
+      message: "Name is required",
+    }),
+    email: z.string().min(1, { message: "Email is required" }).email({
+      message: "Please enter a valid email",
+    }),
+    password: z.string().min(1, { message: "Password is required" }),
+    confirmPassword: z
+      .string()
+      .min(1, { message: "Confirm Password is required" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 const RegisterForm = () => {
-  const navigate = useNavigate();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,15 +43,45 @@ const RegisterForm = () => {
     },
   });
 
-  const handleSubmit = (data: z.infer<typeof formSchema>) => {
-    // handleNavigate();
+  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/v1/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: data.name,
+            email: data.email,
+            password: data.password,
+          }),
+        }
+      );
+      const timeout = 1500;
+      if (response.status === 201) {
+        toast.success("Registration successful!", {
+          description: "Redirecting to auth page...",
+        });
+        setTimeout(() => {
+          window.location.href = "/auth";
+        }, timeout);
+      } else if (response.status === 400) {
+        toast.error("Registration failed!", {
+          description: "Registration failed. Email may already exist.",
+        });
+      } else {
+        toast.error("Registration failed!", {
+          description: "An unexpected error occurred.",
+        });
+      }
+    } catch (error) {
+      toast.error("Registration failed!", {
+        description: "An unexpected error occurred." + error,
+      });
+    }
   };
-
-  const handleNavigate = () => {
-    navigate("/");
-  };
-
-  //TODO: write function validate password and confirmPassword same
 
   return (
     <Card>

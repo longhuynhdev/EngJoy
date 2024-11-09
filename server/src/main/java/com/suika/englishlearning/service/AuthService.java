@@ -68,8 +68,9 @@ public class AuthService {
         user.setEmail(registerDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
-        // Set default role to USER
-        Role role = roleRepository.findByName("USER").orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+        // Set role to USER
+        Role role = roleRepository.findByName(registerDto.getRole())
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
         user.setRole(role);
 
         userRepository.save(user);
