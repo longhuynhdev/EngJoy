@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }).email({
@@ -21,13 +22,6 @@ const formSchema = z.object({
   }),
   password: z.string().min(5, { message: "Password is required" }),
 });
-
-interface LoginResponse {
-  user: string;
-  email: string;
-  role: string;
-  tokenType: string;
-}
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -41,22 +35,54 @@ const LoginForm = () => {
   });
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log(data);
-    const response = await fetch("http://localhost:8080/api/v1/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    try {
+      form.reset(data);
+      const response = await fetch("http://localhost:8080/api/v1/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // handle cookies
+        body: JSON.stringify(data),
+      });
 
-    if (response.ok) {
-      const responseData: LoginResponse = await response.json();
-      console.log("Login successful:", responseData);
-      //TODO Handle successful login (e.g., redirect, store token, etc.)
-    } else {
-      console.error("Login failed");
-      //TODO Handle login failure
+      if (response.ok) {
+        const responseData = await response.json();
+
+        // Save user info to localStorage
+        localStorage.setItem("userInfo", JSON.stringify(responseData.user));
+
+        // Handle navigation based on role
+        const timeout = 1500;
+        const userRole = responseData.user.role;
+        const targetPath =
+          userRole === "USER"
+            ? "/"
+            : userRole === "ADMIN" || userRole === "CONTENT_EDITOR"
+            ? "/dashboard"
+            : "/";
+        const message =
+          userRole === "USER"
+            ? "home page"
+            : userRole === "ADMIN" || userRole === "CONTENT_EDITOR"
+            ? "dashboard page"
+            : "home page";
+
+        toast.success("Login successful!", {
+          description: `Redirecting to ${message}...`,
+        });
+
+        setTimeout(() => {
+          form.reset();
+          navigate(targetPath);
+        }, timeout);
+      } else {
+        toast.error("Login failed", {
+          description: "Please check your credentials",
+        });
+      }
+    } catch (error) {
+      console.error("Login error:", error);
     }
   };
 

@@ -1,7 +1,7 @@
 import Navbar from "@/components/dashboard/Navbar";
 import Sidebar from "@/components/dashboard/Sidebar";
 import { Outlet } from "react-router-dom";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 
 const DashboardLayout = () => {
   return (
@@ -13,7 +13,7 @@ const DashboardLayout = () => {
         </div>
         <div className="p-5 w-full md:max-w-[1400px]">
           <Outlet />
-          <Toaster />
+          <Toaster theme="light" richColors closeButton expand={false} />
         </div>
       </div>
     </>
