@@ -1,7 +1,8 @@
 const category = [
-  { value: "writing", label: "Writing" },
-  { value: "grammar", label: "Grammar" },
-  { value: "idioms", label: "Idioms" },
-  { value: "vocabulary", label: "Vocabulary" },
+  { value: "WRITING", label: "Writing" },
+  { value: "READING", label: "Reading" },
+  { value: "GRAMMAR", label: "Grammar" },
+  { value: "IDIOMS", label: "Idioms" },
+  { value: "VOCABULARY", label: "Vocabulary" },
 ];
 export default category;
