@@ -1,4 +1,4 @@
-import BackButton from "@/components/BackButton";
+import BackButton from "@/components/common/BackButton";
 import { Button } from "@/components/ui/button";
 import LessonsPagination from "@/components/lessons/LessonsPagination";
 import LessonsTable from "@/components/lessons/LessonsTable";

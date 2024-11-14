@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { LessonForm } from "@/components/lessons/LessonForm";
-import BackButton from "@/components/BackButton";
+import BackButton from "@/components/common/BackButton";
 import { useParams } from "react-router-dom";
 import lessons from "@/data/lessons";
 
@@ -21,7 +21,7 @@ const EditLessonPage = () => {
           : [lesson.difficulty],
       }
     : undefined;
-  
+
   // TODO: change any to the correct type
   const handleSubmit = (data: any) => {
     console.log(data);

@@ -7,7 +7,7 @@ const lessons: Lesson[] = [
     body: "Learn the key differences between Present Simple and Present Continuous tenses. Present Simple is used for habits and general truths, while Present Continuous describes actions happening now...",
     author: "Emma Davis",
     date: "2024-05-01",
-    category: ["GRAMMAR"],
+    category: ["GRAMMAR", "VOCABULARY"],
     difficulty: ["BEGINNER"],
     comments: [
       {

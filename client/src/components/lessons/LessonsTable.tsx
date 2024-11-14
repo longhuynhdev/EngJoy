@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
-
+import { Badge } from "@/components/ui/badge";
 import lessons from "@/data/lessons";
 import { Lesson } from "@/types/lessons";
 
@@ -50,14 +50,24 @@ const LessonsTable = ({ limit, title }: LessonsTableProps) => {
           {filteredLessons.map((lesson) => (
             <TableRow key={lesson.id}>
               <TableCell>{lesson.title}</TableCell>
-              <TableCell>{lesson.category}</TableCell>
+              <TableCell>
+                {lesson.category.map((cat, index) => (
+                  <Badge key={index} variant="secondary" className="mx-1">
+                    {cat}
+                  </Badge>
+                ))}
+              </TableCell>
               <TableCell className="hidden md:table-cell">
-                {lesson.difficulty}
+                {lesson.difficulty.map((diff, index) => (
+                  <Badge key={index} variant={"secondary"} className="mx-1">
+                    {diff}
+                  </Badge>
+                ))}
               </TableCell>
               <TableCell className="hidden md:table-cell">
                 {lesson.author}
               </TableCell>
-              <TableCell className="hidden md:table-cell text-right">
+              <TableCell className="hidden md:table-cell text-right text-nowrap">
                 {lesson.date}
               </TableCell>
               <TableCell>
