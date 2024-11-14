@@ -14,7 +14,9 @@ import EditLessonPage from "./pages/dashboard/lessons/edit/EditLessonPage";
 // Auth
 import AuthLayout from "./layouts/AuthLayout";
 import AuthPage from "./pages/auth/AuthPage";
-
+import UserProfilePage from "./pages/auth/UserProfilePage";
+import EditProfilePage from "./pages/auth/EditProfilePage";
+import ChangePasswordPage from "./pages/auth/ChangePasswordPage";
 function App() {
   return (
     <BrowserRouter>
@@ -35,6 +37,9 @@ function App() {
         {/* Auth routes */}
         <Route element={<AuthLayout />}>
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/profile" element={<UserProfilePage />} />
+          <Route path="/edit-profile" element={<EditProfilePage />} />
+          <Route path="/change-password" element={<ChangePasswordPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

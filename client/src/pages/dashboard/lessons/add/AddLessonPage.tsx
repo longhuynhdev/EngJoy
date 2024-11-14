@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { LessonForm } from "@/components/lessons/LessonForm";
-import BackButton from "@/components/BackButton";
+import BackButton from "@/components/common/BackButton";
 
 const AddLessonPage = () => {
   //TODO: change any to the correct type
