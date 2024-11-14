@@ -13,7 +13,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 const formSchema = z
   .object({
     name: z.string().min(1, {
@@ -22,10 +23,10 @@ const formSchema = z
     email: z.string().min(1, { message: "Email is required" }).email({
       message: "Please enter a valid email",
     }),
-    password: z.string().min(1, { message: "Password is required" }),
+    password: z.string().min(5, { message: "Password is required" }),
     confirmPassword: z
       .string()
-      .min(1, { message: "Confirm Password is required" }),
+      .min(5, { message: "Confirm Password is required" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -33,6 +34,18 @@ const formSchema = z
   });
 
 const RegisterForm = () => {
+  const [showPasswords, setShowPasswords] = useState({
+    password: false,
+    confirmPassword: false,
+  });
+
+  const togglePasswordVisibility = (field: keyof typeof showPasswords) => {
+    setShowPasswords((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -141,12 +154,26 @@ const RegisterForm = () => {
                     Password
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      type="password"
-                      className="bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible: ring-offset-0"
-                      placeholder="Enter Password"
-                      {...field}
-                    />
+                    <div className="relative">
+                      <Input
+                        type={showPasswords.password ? "text" : "password"}
+                        className="bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
+                        placeholder="Enter Password"
+                        {...field}
+                      />
+                      <button
+                        type="button"
+                        tabIndex={-1}
+                        onClick={() => togglePasswordVisibility("password")}
+                        className="absolute right-3 top-1/2 -translate-y-1/2"
+                      >
+                        {showPasswords.password ? (
+                          <EyeOff className="h-4 w-4 text-gray-500" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-gray-500" />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -161,12 +188,30 @@ const RegisterForm = () => {
                     Confirm Password
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      type="password"
-                      className="bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible: ring-offset-0"
-                      placeholder="Enter Confirm Password"
-                      {...field}
-                    />
+                    <div className="relative">
+                      <Input
+                        type={
+                          showPasswords.confirmPassword ? "text" : "password"
+                        }
+                        className="bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
+                        placeholder="Enter Confirm Password"
+                        {...field}
+                      />
+                      <button
+                        type="button"
+                        tabIndex={-1}
+                        onClick={() =>
+                          togglePasswordVisibility("confirmPassword")
+                        }
+                        className="absolute right-3 top-1/2 -translate-y-1/2"
+                      >
+                        {showPasswords.confirmPassword ? (
+                          <EyeOff className="h-4 w-4 text-gray-500" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-gray-500" />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

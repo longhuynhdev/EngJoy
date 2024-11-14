@@ -5,8 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import userAvatar from "../../img/user.svg";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff } from "lucide-react";
-
+import { toast } from "sonner";
 interface UserProfileFormProps {
   editable?: boolean;
 }
@@ -19,23 +18,7 @@ const UserProfileForm = ({ editable = false }: UserProfileFormProps) => {
     userName: "User Demo",
     email: "user@joyeng.com",
     role: "USER",
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
   });
-
-  const [showPasswords, setShowPasswords] = useState({
-    oldPassword: false,
-    newPassword: false,
-    confirmPassword: false,
-  });
-
-  const togglePasswordVisibility = (field: keyof typeof showPasswords) => {
-    setShowPasswords((prev) => ({
-      ...prev,
-      [field]: !prev[field],
-    }));
-  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -78,7 +61,7 @@ const UserProfileForm = ({ editable = false }: UserProfileFormProps) => {
     Object.entries(formData).forEach(([key, value]) => {
       formDataToSubmit.append(key, value);
     });
-    console.log("Updated profile with image:", formDataToSubmit);
+    toast.success("Updated profile");
   };
 
   return (
@@ -151,75 +134,6 @@ const UserProfileForm = ({ editable = false }: UserProfileFormProps) => {
                 onChange={handleInputChange}
                 disabled
               />
-
-              {editable && (
-                <>
-                  <Label htmlFor="oldPassword">Current Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="oldPassword"
-                      type={showPasswords.oldPassword ? "text" : "password"}
-                      value={formData.oldPassword}
-                      onChange={handleInputChange}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => togglePasswordVisibility("oldPassword")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2"
-                    >
-                      {showPasswords.oldPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-500" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-500" />
-                      )}
-                    </button>
-                  </div>
-
-                  <Label htmlFor="newPassword">New Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="newPassword"
-                      type={showPasswords.newPassword ? "text" : "password"}
-                      value={formData.newPassword}
-                      onChange={handleInputChange}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => togglePasswordVisibility("newPassword")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2"
-                    >
-                      {showPasswords.newPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-500" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-500" />
-                      )}
-                    </button>
-                  </div>
-
-                  <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      type={showPasswords.confirmPassword ? "text" : "password"}
-                      value={formData.confirmPassword}
-                      onChange={handleInputChange}
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        togglePasswordVisibility("confirmPassword")
-                      }
-                      className="absolute right-3 top-1/2 -translate-y-1/2"
-                    >
-                      {showPasswords.confirmPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-500" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-500" />
-                      )}
-                    </button>
-                  </div>
-                </>
-              )}
             </div>
             {!editable ? (
               <button

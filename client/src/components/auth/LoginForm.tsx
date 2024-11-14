@@ -15,15 +15,27 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 const formSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }).email({
     message: "Please enter a valid email",
   }),
-  password: z.string().min(5, { message: "Password is required" }),
+  password: z.string().min(1, { message: "Password is required" }),
 });
 
 const LoginForm = () => {
+  const [showPasswords, setShowPasswords] = useState({
+    password: false,
+  });
+
+  const togglePasswordVisibility = (field: keyof typeof showPasswords) => {
+    setShowPasswords((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -125,12 +137,26 @@ const LoginForm = () => {
                     Password
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      type="password"
-                      className="bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible: ring-offset-0"
-                      placeholder="Enter password"
-                      {...form.register("password")}
-                    />
+                    <div className="relative">
+                      <Input
+                        type={showPasswords.password ? "text" : "password"}
+                        className="bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
+                        placeholder="Enter Password"
+                        {...field}
+                      />
+                      <button
+                        type="button"
+                        tabIndex={-1}
+                        onClick={() => togglePasswordVisibility("password")}
+                        className="absolute right-3 top-1/2 -translate-y-1/2"
+                      >
+                        {showPasswords.password ? (
+                          <EyeOff className="h-4 w-4 text-gray-500" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-gray-500" />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

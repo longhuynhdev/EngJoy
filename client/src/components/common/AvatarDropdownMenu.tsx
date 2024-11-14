@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useLogout } from "@/hooks/useAuth";
-const UserAvatarDropdownMenu = () => {
+const AvatarDropdownMenu = () => {
   const logout = useLogout();
   return (
     <DropdownMenu>
@@ -21,15 +21,23 @@ const UserAvatarDropdownMenu = () => {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
+        <DropdownMenuLabel>My Dashboard</DropdownMenuLabel>
+        <Link to="/dashboard">
+          <DropdownMenuItem>Dashboard</DropdownMenuItem>
+        </Link>
+        <DropdownMenuSeparator />
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Link to="/profile">Profile</Link>
-        </DropdownMenuItem>
+        <Link to="/profile">
+          <DropdownMenuItem>Profile</DropdownMenuItem>
+        </Link>
+        <Link to="/change-password">
+          <DropdownMenuItem>Change password</DropdownMenuItem>
+        </Link>
         <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
 
-export default UserAvatarDropdownMenu;
+export default AvatarDropdownMenu;
