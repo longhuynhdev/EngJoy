@@ -4,6 +4,11 @@ import com.suika.englishlearning.model.Lesson;
 import com.suika.englishlearning.model.UserEntity;
 import com.suika.englishlearning.model.dto.lesson.LessonRequestDto;
 import com.suika.englishlearning.model.dto.lesson.LessonResponseDto;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,4 +35,10 @@ public class LessonMapper {
         dto.setDifficulties(entity.getDifficulties());
         return dto;
     }
+
+    public List<LessonResponseDto> toDtoList(List<Lesson> entities) {
+        return entities.stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+   
 }

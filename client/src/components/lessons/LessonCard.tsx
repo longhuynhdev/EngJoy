@@ -1,34 +1,47 @@
-import { Card, CardHeader, CardContent, CardTitle, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 interface LessonCardProps {
   title: string;
   body: string;
-  difficulty: string[];
-  category: string[];
+  difficulties?: string[];
+  categories?: string[];
 }
 
-const LessonCard = ({ title, body, difficulty, category }: LessonCardProps) => {
+const LessonCard = ({
+  title,
+  body,
+  categories = [],
+  difficulties = [],
+}: LessonCardProps) => {
   return (
-    <Card>
+    <Card className="flex flex-col min-h-[300px]">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <div>
-          {category.map((cat, index) => (
+        <div className="flex gap-2 flex-wrap">
+          {categories.map((cat, index) => (
             <Badge key={index}>{cat}</Badge>
           ))}
-          {difficulty.map((diff, index) => (
-            <Badge key={index} className="bg-red-500 text white">{diff}</Badge>
+          {difficulties.map((diff, index) => (
+            <Badge key={index} className="bg-red-500 text white">
+              {diff}
+            </Badge>
           ))}
         </div>
       </CardHeader>
       <CardContent>
         <p>{body}</p>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="mt-auto">
         <Button variant="default">View Lesson</Button>
-      </CardFooter>    
+      </CardFooter>
     </Card>
   );
 };

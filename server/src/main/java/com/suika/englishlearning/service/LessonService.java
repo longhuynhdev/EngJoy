@@ -8,8 +8,10 @@ import com.suika.englishlearning.model.dto.lesson.LessonRequestDto;
 import com.suika.englishlearning.model.dto.lesson.LessonResponseDto;
 import com.suika.englishlearning.repository.LessonRepository;
 import com.suika.englishlearning.repository.UserRepository;
-import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
 
 @Service
 public class LessonService {
@@ -31,7 +33,18 @@ public class LessonService {
         return lessonMapper.toDto(lessonRepository.save(lesson));
     }
 
-    public void deleteLesson(String id) {
-        lessonRepository.deleteById(id);
+    public List<LessonResponseDto> getLessons() {
+        return lessonMapper.toDtoList(lessonRepository.findAll());
     }
-}
+
+    public LessonResponseDto getLesson(Integer id) {
+        return lessonMapper.toDto(lessonRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Lesson not found")));
+    }
+
+    public void deleteLesson(Integer id) {
+        if (!lessonRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Lesson not found");
+        }
+        lessonRepository.deleteById(id);
+    }}
