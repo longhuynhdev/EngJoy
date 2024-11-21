@@ -1,12 +1,15 @@
 package com.suika.englishlearning.controller;
 
+import com.suika.englishlearning.exception.ResourceNotFoundException;
 import com.suika.englishlearning.model.dto.lesson.LessonRequestDto;
 import com.suika.englishlearning.model.dto.lesson.LessonResponseDto;
 import com.suika.englishlearning.service.LessonService;
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequestMapping("/api/v1/lessons")
@@ -16,6 +19,20 @@ public class LessonController {
     public LessonController(LessonService lessonService) {
         this.lessonService = lessonService;
     }
+    //TODO: Add filter by catetories, difficulties
+    @GetMapping
+    public ResponseEntity<List<LessonResponseDto>> getLessons() {
+        return new ResponseEntity<>(lessonService.getLessons(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<LessonResponseDto> getLesson(@PathVariable Integer id) {
+        try {
+            return new ResponseEntity<>(lessonService.getLesson(id), HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
     @PostMapping
     public ResponseEntity<LessonResponseDto> createLesson(@RequestBody LessonRequestDto requestDto, String userName) {
@@ -23,10 +40,13 @@ public class LessonController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLesson(@PathVariable String id) {
-        lessonService.deleteLesson(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteLesson(@PathVariable Integer id) {
+        try {
+            lessonService.deleteLesson(id);
+            return ResponseEntity.noContent().build();
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
-
 
 }

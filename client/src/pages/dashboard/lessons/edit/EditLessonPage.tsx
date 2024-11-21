@@ -12,13 +12,14 @@ const EditLessonPage = () => {
     ? {
         title: lesson.title,
         body: lesson.body,
+        author: lesson.author,
         date: lesson.date,
-        category: Array.isArray(lesson.category)
-          ? lesson.category
-          : [lesson.category],
-        difficulty: Array.isArray(lesson.difficulty)
-          ? lesson.difficulty
-          : [lesson.difficulty],
+        category: Array.isArray(lesson.categories)
+          ? lesson.categories
+          : [lesson.categories],
+        difficulty: Array.isArray(lesson.difficulties)
+          ? lesson.difficulties
+          : [lesson.difficulties],
       }
     : undefined;
 
