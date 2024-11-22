@@ -10,23 +10,43 @@ import {
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import lessons from "@/data/lessons";
 import { Lesson } from "@/types/lessons";
+import { useLessons } from "@/hooks/useLesssons";
+import { Loader2 } from "lucide-react";
 
-// TODO: Call api to get lessons data
 interface LessonsTableProps {
   limit?: number;
   title?: string;
 }
 
 const LessonsTable = ({ limit, title }: LessonsTableProps) => {
+  const { lessons, loading, error } = useLessons();
   const baseUrl = "/dashboard/lessons";
-  const sortedLessons: Lesson[] = [...lessons].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
 
-  // Filter lessons to limit
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[200px]">
+        <Loader2 className="animate-spin h-8 w-8" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-red-500 text-center p-4 rounded-md bg-red-50">
+        {error}
+      </div>
+    );
+  }
+
+  const sortedLessons: Lesson[] = lessons
+    ? [...lessons].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      )
+    : [];
+
   const filteredLessons = limit ? sortedLessons.slice(0, limit) : sortedLessons;
+
   return (
     <div className="mt-10">
       <h3 className="text-2xl mb-4 font-semibold">
@@ -37,13 +57,13 @@ const LessonsTable = ({ limit, title }: LessonsTableProps) => {
         <TableHeader>
           <TableRow>
             <TableHead>Title</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead className="hidden md:table-cell">Difficulty</TableHead>
+            <TableHead>Categories</TableHead>
+            <TableHead className="hidden md:table-cell">Difficulties</TableHead>
             <TableHead className="hidden md:table-cell">Author</TableHead>
             <TableHead className="hidden md:table-cell text-right">
               Date
             </TableHead>
-            <TableHead>View</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -51,15 +71,15 @@ const LessonsTable = ({ limit, title }: LessonsTableProps) => {
             <TableRow key={lesson.id}>
               <TableCell>{lesson.title}</TableCell>
               <TableCell>
-                {lesson.category.map((cat, index) => (
+                {lesson.categories.map((cat, index) => (
                   <Badge key={index} variant="secondary" className="mx-1">
                     {cat}
                   </Badge>
                 ))}
               </TableCell>
               <TableCell className="hidden md:table-cell">
-                {lesson.difficulty.map((diff, index) => (
-                  <Badge key={index} variant={"secondary"} className="mx-1">
+                {lesson.difficulties.map((diff, index) => (
+                  <Badge key={index} variant="secondary" className="mx-1">
                     {diff}
                   </Badge>
                 ))}
@@ -68,9 +88,9 @@ const LessonsTable = ({ limit, title }: LessonsTableProps) => {
                 {lesson.author}
               </TableCell>
               <TableCell className="hidden md:table-cell text-right text-nowrap">
-                {lesson.date}
+                {new Date(lesson.date).toLocaleDateString()}
               </TableCell>
-              <TableCell>
+              <TableCell className="whitespace-nowrap">
                 <Link
                   to={`${baseUrl}/edit/${lesson.id}`}
                   className="mr-2 inline-block"

@@ -18,14 +18,18 @@ import AuthPage from "./pages/auth/AuthPage";
 import UserProfilePage from "./pages/auth/UserProfilePage";
 import EditProfilePage from "./pages/auth/EditProfilePage";
 import ChangePasswordPage from "./pages/auth/ChangePasswordPage";
+import NotfoundPage404 from "./pages/auth/NotfoundPage404";
+import ForbiddenPage403 from "./pages/auth/ForbiddenPage403";
+// Lessons
+import LessonsPage from "./pages/lessons/LessonsPage";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         {/* Home routes */}
-        <Route path="/home" element={<HomeLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="lessons" element={<LessonPage/>} />
+        <Route element={<HomeLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="lessons" element={<LessonsPage />} />
         </Route>
 
         {/* Dashboard routes */}
@@ -42,6 +46,8 @@ function App() {
           <Route path="/profile" element={<UserProfilePage />} />
           <Route path="/edit-profile" element={<EditProfilePage />} />
           <Route path="/change-password" element={<ChangePasswordPage />} />
+          <Route path="/404" element={<NotfoundPage404 />} />
+          <Route path="/403" element={<ForbiddenPage403 />} />
         </Route>
       </Routes>
     </BrowserRouter>

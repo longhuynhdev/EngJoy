@@ -1,8 +1,8 @@
-const category = [
+const categories = [
   { value: "WRITING", label: "Writing" },
   { value: "READING", label: "Reading" },
   { value: "GRAMMAR", label: "Grammar" },
   { value: "IDIOMS", label: "Idioms" },
   { value: "VOCABULARY", label: "Vocabulary" },
 ];
-export default category;
+export default categories;

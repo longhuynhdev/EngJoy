@@ -21,16 +21,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import difficulty from "@/data/difficulty";
-import category from "@/data/category";
+import difficulties from "@/data/difficulties";
+import categories from "@/data/categories";
 import { MultiSelect } from "@/components/ui/multi-select";
 
 const formSchema = z.object({
   title: z.string().min(1),
   body: z.string().min(1),
   date: z.string(),
-  category: z.array(z.string()),
-  difficulty: z.array(z.string()),
+  categories: z.array(z.string()),
+  difficulties: z.array(z.string()),
 });
 
 interface LessonFormProps {
@@ -50,19 +50,25 @@ export const LessonForm = ({
       title: "",
       body: "",
       date: "",
-      category: [],
-      difficulty: []
+      categories: [],
+      difficulties: [],
     },
   });
 
-  const handleCategoryChange = (values: string[]) => {
-    form.setValue("category", values);
+  const handleCategoriesChange = (values: string[]) => {
+    form.setValue(
+      "categories",
+      values.map((v) => v.toUpperCase())
+    );
   };
 
-  const handleDifficultyChange = (values: string[]) => {
-    form.setValue("difficulty", values);
+  const handleDifficultiesChange = (values: string[]) => {
+    form.setValue(
+      "difficulties",
+      values.map((v) => v.toUpperCase())
+    );
   };
-//TODO: fix Incorrect use of <label for=FORM_ELEMENT>
+  //TODO: fix Incorrect use of <label for=FORM_ELEMENT>
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -96,7 +102,6 @@ export const LessonForm = ({
               <FormControl>
                 <Textarea
                   className=" h-64 bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
-                  
                   placeholder="Enter content"
                   {...field}
                 />
@@ -153,16 +158,16 @@ export const LessonForm = ({
         />
         <FormField
           control={form.control}
-          name="category"
+          name="categories"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-white">
-                Category
+                Categories
               </FormLabel>
               <FormControl>
                 <MultiSelect
-                  options={category}
-                  onValueChange={handleCategoryChange}
+                  options={categories}
+                  onValueChange={handleCategoriesChange}
                   defaultValue={field.value}
                   placeholder="Select categories"
                   variant="secondary"
@@ -175,7 +180,7 @@ export const LessonForm = ({
         />
         <FormField
           control={form.control}
-          name="difficulty"
+          name="difficulties"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-white">
@@ -183,10 +188,10 @@ export const LessonForm = ({
               </FormLabel>
               <FormControl>
                 <MultiSelect
-                  options={difficulty}
-                  onValueChange={handleDifficultyChange}
+                  options={difficulties}
+                  onValueChange={handleDifficultiesChange}
                   defaultValue={field.value}
-                  placeholder="Select difficulty"
+                  placeholder="Select difficulties"
                   variant="secondary"
                   maxCount={4}
                 />

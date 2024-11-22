@@ -20,9 +20,9 @@ public class Lesson {
 
     @Column(nullable = false)
     private String title;
-
     @Column(columnDefinition = "TEXT", nullable = false)
     private String body;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
