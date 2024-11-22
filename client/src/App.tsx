@@ -4,6 +4,7 @@ import "./App.css";
 // Home
 import HomeLayout from "./layouts/HomeLayout";
 import HomePage from "./pages/home/HomePage";
+import LessonPage from "./pages/home/lessons/Lessons";
 
 //Dashboard
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -22,8 +23,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* Home routes */}
-        <Route element={<HomeLayout />}>
-          <Route path="/Home" element={<HomePage />} />
+        <Route path="/home" element={<HomeLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="lessons" element={<LessonPage/>} />
         </Route>
 
         {/* Dashboard routes */}

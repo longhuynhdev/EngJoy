@@ -1,7 +1,7 @@
 import LessonsPagination from "@/components/lessons/LessonsPagination";
 import LessonCard from "@/components/lessons/LessonCard";
 
-const HomePage = () => {
+const LessonPage = () => {
   return (
     <div>
       <h1>Home page</h1>
@@ -11,9 +11,8 @@ const HomePage = () => {
         difficulty={["Phap Kieu", "HurryKNG", "HIEUTHUHAI"]}
         category={["MasterD", "Hung Huynh", "Quan A.P"]}
       />
-      <LessonsPagination></LessonsPagination>
     </div>
   );
 };
 
-export default HomePage;
+export default LessonPage;
