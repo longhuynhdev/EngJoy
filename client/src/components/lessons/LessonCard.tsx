@@ -7,29 +7,22 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Lesson } from "@/types/lessons";
 
 interface LessonCardProps {
-  title: string;
-  body: string;
-  difficulties?: string[];
-  categories?: string[];
+  lesson: Lesson;
 }
 
-const LessonCard = ({
-  title,
-  body,
-  categories = [],
-  difficulties = [],
-}: LessonCardProps) => {
+const LessonCard = ({ lesson }: LessonCardProps) => {
   return (
-    <Card className="flex flex-col min-h-[300px]">
+    <Card key={lesson.id} className="flex flex-col min-h-[300px]">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="">{lesson.title}</CardTitle>
         <div className="flex gap-2 flex-wrap">
-          {categories.map((cat, index) => (
+          {lesson.categories.map((cat, index) => (
             <Badge key={index}>{cat}</Badge>
           ))}
-          {difficulties.map((diff, index) => (
+          {lesson.difficulties.map((diff, index) => (
             <Badge key={index} className="bg-red-500 text white">
               {diff}
             </Badge>
@@ -37,7 +30,7 @@ const LessonCard = ({
         </div>
       </CardHeader>
       <CardContent>
-        <p>{body}</p>
+        <p className="line-clamp-6">{lesson.shortDescription}</p>
       </CardContent>
       <CardFooter className="mt-auto">
         <Button variant="default">View Lesson</Button>

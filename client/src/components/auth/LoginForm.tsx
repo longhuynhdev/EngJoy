@@ -13,10 +13,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { useLogin } from "@/hooks/useAuth";
+
 const formSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }).email({
     message: "Please enter a valid email",
@@ -25,6 +25,8 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
+  const login = useLogin();
+
   const [showPasswords, setShowPasswords] = useState({
     password: false,
   });
@@ -35,8 +37,6 @@ const LoginForm = () => {
       [field]: !prev[field],
     }));
   };
-
-  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,49 +49,9 @@ const LoginForm = () => {
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       form.reset(data);
-      const response = await fetch("http://localhost:8080/api/v1/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // handle cookies
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        const responseData = await response.json();
-
-        // Save user info to localStorage
-        localStorage.setItem("userInfo", JSON.stringify(responseData.user));
-
-        // Handle navigation based on role
-        const timeout = 1500;
-        const userRole = responseData.user.role;
-        const targetPath =
-          userRole === "USER"
-            ? "/"
-            : userRole === "ADMIN" || userRole === "CONTENT_EDITOR"
-            ? "/dashboard"
-            : "/";
-        const message =
-          userRole === "USER"
-            ? "home page"
-            : userRole === "ADMIN" || userRole === "CONTENT_EDITOR"
-            ? "dashboard page"
-            : "home page";
-
-        toast.success("Login successful!", {
-          description: `Redirecting to ${message}...`,
-        });
-
-        setTimeout(() => {
-          form.reset();
-          navigate(targetPath);
-        }, timeout);
-      } else {
-        toast.error("Login failed", {
-          description: "Please check your credentials",
-        });
+      const result = await login(data);
+      if (result.success) {
+        form.reset();
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -119,9 +79,9 @@ const LoginForm = () => {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      className="bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible: ring-offset-0"
+                      className="bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
                       placeholder="Enter email"
-                      {...form.register("email")}
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -179,7 +139,9 @@ const LoginForm = () => {
                 Continue with Microsoft
               </Button>
             </div>
-            <Button className="w-full">Sign in</Button>
+            <Button type="submit" className="w-full">
+              Sign in
+            </Button>
           </form>
         </Form>
       </CardContent>

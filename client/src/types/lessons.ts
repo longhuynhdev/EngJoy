@@ -2,6 +2,7 @@
 export interface Lesson {
   id: string;
   title: string;
+  shortDescription: string;
   body: string;
   author: string;
   date: string;

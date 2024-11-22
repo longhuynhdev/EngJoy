@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 public class LessonRequestDto {
     private String title;
+    private String shortDescription;
     private String body;
     private LocalDateTime date;
     private List<Category> categories;

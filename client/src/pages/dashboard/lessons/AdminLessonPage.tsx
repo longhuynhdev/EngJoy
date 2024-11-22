@@ -3,7 +3,11 @@ import { Button } from "@/components/ui/button";
 import LessonsPagination from "@/components/lessons/LessonsPagination";
 import LessonsTable from "@/components/lessons/LessonsTable";
 import { Link } from "react-router-dom";
+import { useLessons } from "@/hooks/useLesssons";
+
 const AdminLessonsPage = () => {
+  const { lessons, loading, error } = useLessons();
+
   return (
     <>
       <div className="flex justify-between">
@@ -14,7 +18,7 @@ const AdminLessonsPage = () => {
           </Button>
         </Link>
       </div>
-      <LessonsTable />
+      <LessonsTable lessons={lessons} loading={loading} error={error} />
       <LessonsPagination />
     </>
   );
