@@ -11,16 +11,23 @@ import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Lesson } from "@/types/lessons";
-import { useLessons } from "@/hooks/useLesssons";
 import { Loader2 } from "lucide-react";
 
 interface LessonsTableProps {
+  lessons: Lesson[];
+  loading: boolean;
+  error: string | null;
   limit?: number;
   title?: string;
 }
 
-const LessonsTable = ({ limit, title }: LessonsTableProps) => {
-  const { lessons, loading, error } = useLessons();
+const LessonsTable = ({
+  lessons,
+  loading,
+  error,
+  limit,
+  title,
+}: LessonsTableProps) => {
   const baseUrl = "/dashboard/lessons";
 
   if (loading) {
