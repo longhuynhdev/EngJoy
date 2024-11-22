@@ -9,6 +9,7 @@ import com.suika.englishlearning.model.dto.lesson.LessonResponseDto;
 import com.suika.englishlearning.repository.LessonRepository;
 import com.suika.englishlearning.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -34,7 +35,12 @@ public class LessonService {
     }
 
     public List<LessonResponseDto> getLessons() {
-        return lessonMapper.toDtoList(lessonRepository.findAll());
+        List<Lesson> lessons = lessonRepository.findAll();
+        List<LessonResponseDto> lessonResponseDtos = new ArrayList<>();
+        for(Lesson lesson : lessons) {
+            lessonResponseDtos.add(lessonMapper.toDto(lesson));
+        }
+        return  lessonResponseDtos;
     }
 
     public LessonResponseDto getLesson(Integer id) {

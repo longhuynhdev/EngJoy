@@ -15,7 +15,6 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
-    @Query("select u.name, u.email, u.password from UserEntity u where u.email = :email")
     Optional<UserEntity> findByEmail(@Param("email") String email);
 
     Boolean existsByEmail(String email);

@@ -36,10 +36,4 @@ public class LessonMapper {
         dto.setDifficulties(entity.getDifficulties());
         return dto;
     }
-
-    public List<LessonResponseDto> toDtoList(List<Lesson> entities) {
-        return entities.stream().map(this::toDto).collect(Collectors.toList());
-    }
-
-   
 }

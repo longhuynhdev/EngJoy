@@ -1,6 +1,7 @@
 package com.suika.englishlearning.controller;
 
 import com.suika.englishlearning.model.UserEntity;
+import com.suika.englishlearning.model.dto.user.UserDto;
 import com.suika.englishlearning.service.UserEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +20,12 @@ public class UserEntityController {
     }
 
     @GetMapping(path = "getUser{email}")
-    public Optional<UserEntity> getUserByEmail(@PathVariable("email") String email) {
+    public UserDto getUserByEmail(@PathVariable("email") String email) {
         return userEntityService.getUserByEmail(email);
     }
 
     @GetMapping(path = "getUsers")
-    public List<UserEntity> getUsers() {
+    public List<UserDto> getUsers() {
         return userEntityService.getUsers();
     }
 
