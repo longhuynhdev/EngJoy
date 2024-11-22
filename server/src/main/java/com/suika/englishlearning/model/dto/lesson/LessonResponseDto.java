@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class LessonResponseDto {
     private int id;
+    private String shortDescription;
     private String title;
     private String body;
     private String author;

@@ -18,6 +18,8 @@ public class Lesson {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private String shortDescription;
+
     @Column(nullable = false)
     private String title;
     @Column(columnDefinition = "TEXT", nullable = false)

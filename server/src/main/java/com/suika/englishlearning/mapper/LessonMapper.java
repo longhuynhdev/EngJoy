@@ -7,7 +7,6 @@ import com.suika.englishlearning.model.dto.lesson.LessonResponseDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Component;
 
@@ -16,6 +15,7 @@ public class LessonMapper {
     public Lesson toEntity(LessonRequestDto dto, UserEntity author) {
         Lesson lesson = new Lesson();
         lesson.setTitle(dto.getTitle());
+        lesson.setShortDescription(dto.getShortDescription());
         lesson.setBody(dto.getBody());
         lesson.setDate(dto.getDate());
         lesson.setAuthor(author);
@@ -28,6 +28,7 @@ public class LessonMapper {
         LessonResponseDto dto = new LessonResponseDto();
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
+        dto.setShortDescription(entity.getShortDescription());
         dto.setBody(entity.getBody());
         dto.setAuthor(entity.getAuthor().getName());
         dto.setDate(entity.getDate());

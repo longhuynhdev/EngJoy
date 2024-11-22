@@ -30,7 +30,7 @@ const LessonCard = ({ lesson }: LessonCardProps) => {
         </div>
       </CardHeader>
       <CardContent>
-        <p className="line-clamp-6">{lesson.body}</p>
+        <p className="line-clamp-6">{lesson.shortDescription}</p>
       </CardContent>
       <CardFooter className="mt-auto">
         <Button variant="default">View Lesson</Button>
