@@ -19,7 +19,7 @@ public class LessonController {
     public LessonController(LessonService lessonService) {
         this.lessonService = lessonService;
     }
-    //TODO: Add filter by catetories, difficulties
+    //TODO: Add filter by categories, difficulties
     @GetMapping
     public ResponseEntity<List<LessonResponseDto>> getLessons() {
         return new ResponseEntity<>(lessonService.getLessons(), HttpStatus.OK);

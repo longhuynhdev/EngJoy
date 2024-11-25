@@ -5,12 +5,10 @@ import com.suika.englishlearning.mapper.UserMapper;
 import com.suika.englishlearning.model.UserEntity;
 import com.suika.englishlearning.model.dto.user.UserDto;
 import com.suika.englishlearning.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserEntityService {

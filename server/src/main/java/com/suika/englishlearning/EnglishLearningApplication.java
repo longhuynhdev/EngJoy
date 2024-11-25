@@ -23,17 +23,17 @@ public class EnglishLearningApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-//        // Create a list of default roles
-//        List<Role> roles = List.of(
-//                new Role("USER"),
-//                new Role("CONTENT_EDITOR"),
-//                new Role("ADMIN")
-//        );
-//        // Check if the roles already exist in the database
-//        for (Role role : roles) {
-//            if(roleRepository.findByName(role.getName()).isEmpty()) {
-//                roleRepository.save(role);
-//            }
-//        }
+        // Create a list of default roles
+        List<Role> roles = List.of(
+                new Role("USER"),
+                new Role("CONTENT_EDITOR"),
+                new Role("ADMIN")
+        );
+        // Check if the roles already exist in the database
+        for (Role role : roles) {
+            if(roleRepository.findByName(role.getName()).isEmpty()) {
+                roleRepository.save(role);
+            }
+        }
     }
 }

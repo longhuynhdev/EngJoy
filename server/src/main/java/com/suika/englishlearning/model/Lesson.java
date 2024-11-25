@@ -18,10 +18,12 @@ public class Lesson {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String shortDescription;
 
     @Column(nullable = false)
     private String title;
+
     @Column(columnDefinition = "TEXT", nullable = false)
     private String body;
 

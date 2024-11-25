@@ -33,14 +33,14 @@ const LessonsTable = ({
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[200px]">
-        <Loader2 className="animate-spin h-8 w-8" />
+        <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-red-500 text-center p-4 rounded-md bg-red-50">
+      <div className="p-4 text-center text-red-500 rounded-md bg-red-50">
         {error}
       </div>
     );
@@ -56,7 +56,7 @@ const LessonsTable = ({
 
   return (
     <div className="mt-10">
-      <h3 className="text-2xl mb-4 font-semibold">
+      <h3 className="mb-4 text-2xl font-semibold">
         {title ? title : "Lessons"}
       </h3>
       <Table>
@@ -67,7 +67,7 @@ const LessonsTable = ({
             <TableHead>Categories</TableHead>
             <TableHead className="hidden md:table-cell">Difficulties</TableHead>
             <TableHead className="hidden md:table-cell">Author</TableHead>
-            <TableHead className="hidden md:table-cell text-right">
+            <TableHead className="hidden text-right md:table-cell">
               Date
             </TableHead>
             <TableHead>Actions</TableHead>
@@ -94,15 +94,15 @@ const LessonsTable = ({
               <TableCell className="hidden md:table-cell">
                 {lesson.author}
               </TableCell>
-              <TableCell className="hidden md:table-cell text-right text-nowrap">
+              <TableCell className="hidden text-right md:table-cell text-nowrap">
                 {new Date(lesson.date).toLocaleDateString()}
               </TableCell>
               <TableCell className="whitespace-nowrap">
                 <Link
                   to={`${baseUrl}/edit/${lesson.id}`}
-                  className="mr-2 inline-block"
+                  className="inline-block mr-2"
                 >
-                  <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xs">
+                  <Button className="px-4 py-2 text-xs font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
                     Edit
                   </Button>
                 </Link>
@@ -112,7 +112,7 @@ const LessonsTable = ({
                 >
                   <Button
                     variant="destructive"
-                    className="hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-xs"
+                    className="px-4 py-2 text-xs font-bold text-white rounded hover:bg-red-700"
                   >
                     Delete
                   </Button>

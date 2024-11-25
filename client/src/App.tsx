@@ -4,14 +4,16 @@ import "./App.css";
 // Home
 import HomeLayout from "./layouts/HomeLayout";
 import HomePage from "./pages/home/HomePage";
-import LessonPage from "./pages/home/lessons/Lessons";
 
 //Dashboard
 import DashboardLayout from "./layouts/DashboardLayout";
 import DashBoardPage from "./pages/dashboard/DashboardPage";
+// Dashboard - Lessons
 import AdminLessonsPage from "./pages/dashboard/lessons/AdminLessonPage";
-import AddLessonPage from "./pages/dashboard/lessons/add/AddLessonPage";
-import EditLessonPage from "./pages/dashboard/lessons/edit/EditLessonPage";
+import AddLessonPage from "./pages/dashboard/lessons/AddLessonPage";
+import EditLessonPage from "./pages/dashboard/lessons/EditLessonPage";
+// Dashboard - Categories
+import CategoriesManagement from "./pages/dashboard/categories/TagsManagement";
 // Auth
 import AuthLayout from "./layouts/AuthLayout";
 import AuthPage from "./pages/auth/AuthPage";
@@ -22,6 +24,8 @@ import NotfoundPage404 from "./pages/auth/NotfoundPage404";
 import ForbiddenPage403 from "./pages/auth/ForbiddenPage403";
 // Lessons
 import LessonsPage from "./pages/lessons/LessonsPage";
+import LessonDetailsPage from "./pages/lessons/LessonDetailsPage";
+
 function App() {
   return (
     <BrowserRouter>
@@ -29,7 +33,12 @@ function App() {
         {/* Home routes */}
         <Route element={<HomeLayout />}>
           <Route path="/" element={<HomePage />} />
+        </Route>
+
+        {/* Lessons */}
+        <Route element={<HomeLayout />}>
           <Route path="lessons" element={<LessonsPage />} />
+          <Route path="lessons/:id" element={<LessonDetailsPage />} />
         </Route>
 
         {/* Dashboard routes */}
@@ -38,6 +47,7 @@ function App() {
           <Route path="lessons" element={<AdminLessonsPage />} />
           <Route path="lessons/add" element={<AddLessonPage />} />
           <Route path="lessons/edit/:id" element={<EditLessonPage />} />
+          <Route path="categories" element={<CategoriesManagement />} />
         </Route>
 
         {/* Auth routes */}

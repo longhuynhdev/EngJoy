@@ -8,7 +8,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Lesson } from "@/types/lessons";
-
+import { Link } from "react-router-dom";
 interface LessonCardProps {
   lesson: Lesson;
 }
@@ -33,7 +33,9 @@ const LessonCard = ({ lesson }: LessonCardProps) => {
         <p className="line-clamp-6">{lesson.shortDescription}</p>
       </CardContent>
       <CardFooter className="mt-auto">
-        <Button variant="default">View Lesson</Button>
+        <Link to={`/lessons/${lesson.id}`}>
+          <Button variant="default">View Lesson</Button>
+        </Link>
       </CardFooter>
     </Card>
   );

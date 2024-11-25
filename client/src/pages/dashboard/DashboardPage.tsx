@@ -9,7 +9,11 @@ import {
 } from "lucide-react";
 import DashboardCard from "@/components/dashboard/DashBoardCard";
 import LessonsTable from "@/components/lessons/LessonsTable";
+import { useLessons } from "@/hooks/useLesssons";
+
 const DashBoardPage = () => {
+  const { lessons, loading, error } = useLessons();
+
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-5">
@@ -49,7 +53,7 @@ const DashBoardPage = () => {
           icon={<User className="text-slate-500" size={72} />}
         />
       </div>
-      <LessonsTable />
+      <LessonsTable lessons={lessons} loading={loading} error={error} />
     </>
   );
 };

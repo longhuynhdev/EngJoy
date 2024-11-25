@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -24,9 +24,10 @@ import {
 import difficulties from "@/data/difficulties";
 import categories from "@/data/categories";
 import { MultiSelect } from "@/components/ui/multi-select";
-
+import Tiptap from "../Tiptap";
 const formSchema = z.object({
   title: z.string().min(1),
+  shortDescription: z.string().min(1),
   body: z.string().min(1),
   date: z.string(),
   categories: z.array(z.string()),
@@ -37,17 +38,20 @@ interface LessonFormProps {
   initialData?: z.infer<typeof formSchema>;
   onSubmit: (data: z.infer<typeof formSchema>) => void;
   submitLabel?: string;
+  isLoading?: boolean;
 }
 
 export const LessonForm = ({
   initialData,
   onSubmit,
   submitLabel = "Submit",
+  isLoading,
 }: LessonFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       title: "",
+      shortDescription: "",
       body: "",
       date: "",
       categories: [],
@@ -68,7 +72,7 @@ export const LessonForm = ({
       values.map((v) => v.toUpperCase())
     );
   };
-  //TODO: fix Incorrect use of <label for=FORM_ELEMENT>
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -77,13 +81,28 @@ export const LessonForm = ({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-white">
+              <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-white">
                 Title
               </FormLabel>
               <FormControl>
-                <Input
-                  className="bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
-                  placeholder="Enter title"
+                <Input placeholder="Enter title" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="shortDescription"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-white">
+                Short Description
+              </FormLabel>
+              <FormControl>
+                <Textarea
+                  spellCheck="false"
+                  placeholder="Enter short description"
                   {...field}
                 />
               </FormControl>
@@ -96,14 +115,15 @@ export const LessonForm = ({
           name="body"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-white">
+              <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-white">
                 Content
               </FormLabel>
               <FormControl>
-                <Textarea
-                  className=" h-64 bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
-                  placeholder="Enter content"
-                  {...field}
+                <Tiptap
+                  description={field.value}
+                  onChange={(html) => {
+                    field.onChange(html);
+                  }}
                 />
               </FormControl>
               <FormMessage />
@@ -115,7 +135,7 @@ export const LessonForm = ({
           name="date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-white">
+              <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-white">
                 Date
               </FormLabel>
               <FormControl>
@@ -129,7 +149,7 @@ export const LessonForm = ({
                           !field.value && "text-muted-foreground"
                         )}
                       >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        <CalendarIcon className="w-4 h-4 mr-2" />
                         {field.value ? (
                           format(new Date(field.value), "PPP")
                         ) : (
@@ -161,7 +181,7 @@ export const LessonForm = ({
           name="categories"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-white">
+              <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-white">
                 Categories
               </FormLabel>
               <FormControl>
@@ -183,7 +203,7 @@ export const LessonForm = ({
           name="difficulties"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-white">
+              <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-white">
                 Difficulty
               </FormLabel>
               <FormControl>
@@ -200,7 +220,10 @@ export const LessonForm = ({
             </FormItem>
           )}
         />
-        <Button className="w-full dark:bg-slate-800">{submitLabel}</Button>
+        <Button className="w-full dark:bg-slate-800" disabled={isLoading}>
+          {isLoading ? <Loader2 className="w-8 h-8 animate-spin" /> : null}
+          {submitLabel}
+        </Button>
       </form>
     </Form>
   );
