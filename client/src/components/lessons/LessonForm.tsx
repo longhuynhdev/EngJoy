@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -25,9 +25,13 @@ import difficulties from "@/data/difficulties";
 import categories from "@/data/categories";
 import { MultiSelect } from "@/components/ui/multi-select";
 import Tiptap from "../Tiptap";
+import { LoadingSpinner } from "../common/LoadingSpinner";
+
 const formSchema = z.object({
   title: z.string().min(1),
   shortDescription: z.string().min(1),
+  duration: z.string().min(1),
+  points: z.string().min(1),
   body: z.string().min(1),
   date: z.string(),
   categories: z.array(z.string()),
@@ -52,6 +56,8 @@ export const LessonForm = ({
     defaultValues: initialData || {
       title: "",
       shortDescription: "",
+      duration: "",
+      points: "",
       body: "",
       date: "",
       categories: [],
@@ -62,14 +68,14 @@ export const LessonForm = ({
   const handleCategoriesChange = (values: string[]) => {
     form.setValue(
       "categories",
-      values.map((v) => v.toUpperCase())
+      values.map((v) => v)
     );
   };
 
   const handleDifficultiesChange = (values: string[]) => {
     form.setValue(
       "difficulties",
-      values.map((v) => v.toUpperCase())
+      values.map((v) => v)
     );
   };
 
@@ -105,6 +111,36 @@ export const LessonForm = ({
                   placeholder="Enter short description"
                   {...field}
                 />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="duration"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-white">
+                Duration
+              </FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="Enter duration" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="points"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-white">
+                Points
+              </FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="Enter points" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -221,7 +257,7 @@ export const LessonForm = ({
           )}
         />
         <Button className="w-full dark:bg-slate-800" disabled={isLoading}>
-          {isLoading ? <Loader2 className="w-8 h-8 animate-spin" /> : null}
+          {isLoading ? <LoadingSpinner /> : null}
           {submitLabel}
         </Button>
       </form>

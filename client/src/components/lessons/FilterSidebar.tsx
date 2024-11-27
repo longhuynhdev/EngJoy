@@ -16,7 +16,6 @@ const categories = [
   "GRAMMAR",
   "VOCABULARY",
   "IDIOMS",
-  "PRONUNCIATION",
   "WRITING",
 ];
 
@@ -58,9 +57,9 @@ const FilterSidebar = ({
 
       {/* Categories Section */}
       <ScrollArea className="h-[300px] mb-4 rounded-md border p-4">
-        <h2 className="text-lg font-semibold mb-2">Categories</h2>
+        <h2 className="mb-2 text-lg font-semibold">Categories</h2>
         {categories.map((category) => (
-          <div key={category} className="flex items-center space-x-2 mb-2">
+          <div key={category} className="flex items-center mb-2 space-x-2">
             <Checkbox
               id={`category-${category}`}
               checked={selectedCategories.includes(category)}
@@ -78,9 +77,9 @@ const FilterSidebar = ({
 
       {/* Difficulties Section */}
       <ScrollArea className="h-[200px] rounded-md border p-4">
-        <h2 className="text-lg font-semibold mb-2">Difficulty</h2>
+        <h2 className="mb-2 text-lg font-semibold">Difficulty</h2>
         {difficulties.map((difficulty) => (
-          <div key={difficulty} className="flex items-center space-x-2 mb-2">
+          <div key={difficulty} className="flex items-center mb-2 space-x-2">
             <Checkbox
               id={`difficulty-${difficulty}`}
               checked={selectedDifficulties.includes(difficulty)}

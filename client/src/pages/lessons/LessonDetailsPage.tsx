@@ -1,55 +1,56 @@
 import { useParams } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
-
-import { Loader2 } from "lucide-react";
-
 import { useLesson } from "@/hooks/useLessson";
-
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import { ErrorMessage } from "@/components/common/ErrorMessage";
+import { useNavigate } from "react-router-dom";
+import { QuizCard } from "@/components/QuizCard";
 const LessonDetailsPage = () => {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { lesson, loading, error } = useLesson(id || "");
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <Loader2 className="animate-spin h-8 w-8" />
-      </div>
-    );
+    return <LoadingSpinner />;
+  }
+
+  if (error === "404" || !lesson) {
+    navigate("/404");
+    return null;
   }
 
   if (error) {
-    return (
-      <div className="text-red-500 text-center p-4 rounded-md bg-red-50">
-        {error}
-      </div>
-    );
-  }
-
-  if (!lesson) {
-    return <div>Lesson not found</div>;
+    return <ErrorMessage message={error} />;
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <article className="prose prose-slate dark:prose-invert lg:prose-xl mx-auto">
-        <h1 className="mb-4">{lesson.title}</h1>
-        <div className="flex flex-wrap gap-2 mb-4">
-          {lesson.categories.map((category) => (
-            <Badge key={category} variant="secondary">
-              {category}
-            </Badge>
-          ))}
-          {lesson.difficulties.map((difficulty) => (
-            <Badge key={difficulty} variant="outline">
-              {difficulty}
-            </Badge>
-          ))}
-        </div>
-        <div className="mt-6">{lesson.body}</div>
+    <div className="container max-w-4xl px-4 py-8 mx-auto">
+      <article className="mx-auto">
+        <header className="mb-8">
+          <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
+            {lesson.title}
+          </h1>
+          <div className="flex flex-wrap gap-2">
+            {lesson.categories.map((category) => (
+              <Badge key={category} variant="default">
+                {category}
+              </Badge>
+            ))}
+            {lesson.difficulties.map((difficulty) => (
+              <Badge key={difficulty} variant="destructive">
+                {difficulty}
+              </Badge>
+            ))}
+          </div>
+        </header>
+
+        {/* Main content*/}
+        <div
+          className="prose prose-slate max-w-none dark:prose-invert prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-a:text-blue-600 hover:prose-a:text-blue-500 prose-img:rounded-lg"
+          dangerouslySetInnerHTML={{ __html: lesson.body }}
+        />
       </article>
+      <QuizCard/>
     </div>
   );
 };

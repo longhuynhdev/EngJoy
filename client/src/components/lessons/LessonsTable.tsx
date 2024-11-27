@@ -10,15 +10,16 @@ import {
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import { Lesson } from "@/types/lessons";
-import { Loader2 } from "lucide-react";
-
+import { Lesson } from "@/types/Lessons";
+import { LoadingSpinner } from "../common/LoadingSpinner";
+import { ErrorMessage } from "../common/ErrorMessage";
+import { DeleteConfirmationPopover } from "../common/DeleteConfirmationPopover";
 interface LessonsTableProps {
   lessons: Lesson[];
+  onDelete: (id: string) => Promise<void>;
   loading: boolean;
   error: string | null;
   limit?: number;
-  title?: string;
 }
 
 const LessonsTable = ({
@@ -26,24 +27,16 @@ const LessonsTable = ({
   loading,
   error,
   limit,
-  title,
+  onDelete,
 }: LessonsTableProps) => {
   const baseUrl = "/dashboard/lessons";
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <Loader2 className="w-8 h-8 animate-spin" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (error) {
-    return (
-      <div className="p-4 text-center text-red-500 rounded-md bg-red-50">
-        {error}
-      </div>
-    );
+    return <ErrorMessage message={`${error} Lessons`} />;
   }
 
   const sortedLessons: Lesson[] = lessons
@@ -56,9 +49,7 @@ const LessonsTable = ({
 
   return (
     <div className="mt-10">
-      <h3 className="mb-4 text-2xl font-semibold">
-        {title ? title : "Lessons"}
-      </h3>
+      <h3 className="mb-4 text-2xl font-semibold">{"Lessons"}</h3>
       <Table>
         <TableCaption>A list of recent lessons</TableCaption>
         <TableHeader>
@@ -106,17 +97,15 @@ const LessonsTable = ({
                     Edit
                   </Button>
                 </Link>
-                <Link
-                  to={`${baseUrl}/delete/${lesson.id}`}
-                  className="inline-block"
-                >
-                  <Button
-                    variant="destructive"
-                    className="px-4 py-2 text-xs font-bold text-white rounded hover:bg-red-700"
-                  >
-                    Delete
-                  </Button>
-                </Link>
+                <DeleteConfirmationPopover
+                  title="Delete Lesson"
+                  message={`Are you sure you want to delete "${lesson.title}"?`}
+                  onConfirm={() => {
+                    if (onDelete) {
+                      onDelete(lesson.id);
+                    }
+                  }}
+                />
               </TableCell>
             </TableRow>
           ))}

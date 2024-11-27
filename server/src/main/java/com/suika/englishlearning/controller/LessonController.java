@@ -35,8 +35,21 @@ public class LessonController {
     }
 
     @PostMapping
-    public ResponseEntity<LessonResponseDto> createLesson(@RequestBody LessonRequestDto requestDto, String userName) {
-        return new ResponseEntity<>(lessonService.createLesson(requestDto, userName), HttpStatus.CREATED);
+    public ResponseEntity<?> createLesson(@RequestBody LessonRequestDto requestDto, String userName) {
+        try {
+            return new ResponseEntity<>(lessonService.createLesson(requestDto, userName), HttpStatus.CREATED);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateLesson(@PathVariable Integer id, @RequestBody LessonRequestDto requestDto) {
+        try {
+            return new ResponseEntity<>(lessonService.updateLesson(id, requestDto), HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/{id}")

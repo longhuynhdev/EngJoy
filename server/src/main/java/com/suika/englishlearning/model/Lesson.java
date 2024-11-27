@@ -3,8 +3,6 @@ package com.suika.englishlearning.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.suika.englishlearning.model.enums.Category;
-import com.suika.englishlearning.model.enums.Difficulty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,9 +22,28 @@ public class Lesson {
     @Column(nullable = false)
     private String title;
 
+    private int duration;
+
+    private int points;
+
     @Column(columnDefinition = "TEXT", nullable = false)
     private String body;
 
+    @ManyToMany
+    @JoinTable(
+            name = "lesson_categories",
+            joinColumns = @JoinColumn(name = "lesson_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories;
+
+    @ManyToMany
+    @JoinTable(
+            name = "lesson_difficulties",
+            joinColumns = @JoinColumn(name = "lesson_id"),
+            inverseJoinColumns = @JoinColumn(name = "difficulty_id")
+    )
+    private List<Difficulty> difficulties;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
@@ -35,13 +52,6 @@ public class Lesson {
     @Column(nullable = false)
     private LocalDateTime date;
 
-    @ElementCollection
-    @CollectionTable(name = "lesson_categories")
-    @Enumerated(EnumType.STRING)
-    private List<Category> categories;
 
-    @ElementCollection
-    @CollectionTable(name = "lesson_difficulties")
-    @Enumerated(EnumType.STRING)
-    private List<Difficulty> difficulties;
+
 }

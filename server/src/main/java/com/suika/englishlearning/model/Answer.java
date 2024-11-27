@@ -2,17 +2,14 @@ package com.suika.englishlearning.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
-
-import java.util.List;
 
 @Entity
 @Data
-public class Question {
+public class Answer {
     @Id
     private int id;
-    private String question;
-    @OneToMany
-    private List<Answer> answers;
+    private String answer;
+    private String explanation;
+    private boolean idCorrect;
 }

@@ -1,7 +1,7 @@
 import { Lesson } from "@/types/lessons";
-import { Loader2 } from "lucide-react";
 import LessonCard from "./LessonCard";
-
+import { LoadingSpinner } from "../common/LoadingSpinner";
+import { ErrorMessage } from "../common/ErrorMessage";
 interface ListLessonsProps {
   lessons: Lesson[];
   loading: boolean;
@@ -20,18 +20,12 @@ const ListLessons = ({
   selectedDifficulties,
 }: ListLessonsProps) => {
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <Loader2 className="animate-spin h-8 w-8" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (error) {
     return (
-      <div className="text-red-500 text-center p-4 rounded-md bg-red-50">
-        {error}
-      </div>
+      <ErrorMessage message={error}/>
     );
   }
 
@@ -50,12 +44,12 @@ const ListLessons = ({
   });
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {filteredLessons.map((lesson) => (
         <LessonCard key={lesson.id} lesson={lesson} />
       ))}
       {filteredLessons.length === 0 && (
-        <div className="col-span-full text-center py-8 text-gray-500">
+        <div className="py-8 text-center text-gray-500 col-span-full">
           No lessons found matching your criteria
         </div>
       )}

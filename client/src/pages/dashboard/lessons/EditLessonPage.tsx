@@ -3,14 +3,17 @@ import { LessonForm } from "@/components/lessons/LessonForm";
 import BackButton from "@/components/common/BackButton";
 import { useParams } from "react-router-dom";
 import { useLesson } from "@/hooks/useLessson";
-import { Lesson } from "@/types/lessons";
-import { Loader2 } from "lucide-react";
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import { ErrorMessage } from "@/components/common/ErrorMessage";
+import { useNavigate } from "react-router-dom";
+import { AddEditLessonData } from "@/types/AddEditLessonData";
 
 const EditLessonPage = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const { lesson, loading, error } = useLesson(id!);
 
-  const initialData = lesson
+  const initialData: AddEditLessonData | undefined = lesson
     ? {
         title: lesson.title,
         shortDescription: lesson.shortDescription,
@@ -18,39 +21,46 @@ const EditLessonPage = () => {
         date: lesson.date,
         categories: lesson.categories,
         difficulties: lesson.difficulties,
+        duration: lesson.duration,
+        points: lesson.points,
       }
     : undefined;
 
-  const handleSubmit = async (data: Omit<Lesson, 'id' | 'comments' | 'author' | 'shortDescription'>) => {
+  const handleSubmit = async (data: AddEditLessonData) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/lessons/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `http://localhost:8080/api/v1/lessons/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to update lesson');
+        throw new Error("Failed to update lesson");
       }
 
       toast.success(`Lesson: ${data.title} has been updated successfully`);
+      navigate("/dashboard/lessons");
     } catch (error) {
-      toast.error('Failed to update lesson');
+      toast.error("Failed to update lesson");
     }
   };
 
   if (loading) {
-    return <Loader2 className="animate-spin h-8 w-8 mx-auto" />;
+    return <LoadingSpinner />;
+  }
+
+  if (error === "404" || !lesson) {
+    navigate("/404");
+    return null;
   }
 
   if (error) {
-    return <div className="text-red-500">Error: {error}</div>;
-  }
-
-  if (!lesson) {
-    return <div>Lesson not found</div>;
+    return <ErrorMessage message={error} />;
   }
 
   return (

@@ -12,7 +12,7 @@ const LessonsPage = () => {
   const { lessons, loading, error } = useLessons();
 
   return (
-    <div className="container mx-auto px-4 py-8 flex">
+    <div className="container flex px-4 py-8 mx-auto">
       <FilterSidebar
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
