@@ -6,7 +6,6 @@ import com.suika.englishlearning.mapper.UserMapper;
 import com.suika.englishlearning.model.UserEntity;
 import com.suika.englishlearning.model.dto.user.ChangeNameDto;
 import com.suika.englishlearning.model.dto.user.ChangePasswordDto;
-import com.suika.englishlearning.model.dto.user.UpdateUserDto;
 import com.suika.englishlearning.model.dto.user.UserDto;
 import com.suika.englishlearning.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -15,7 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.naming.InvalidNameException;
 import java.util.List;
 import java.util.Objects;
 
