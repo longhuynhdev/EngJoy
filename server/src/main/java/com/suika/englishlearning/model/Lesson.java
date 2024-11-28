@@ -45,6 +45,15 @@ public class Lesson {
     )
     private List<Difficulty> difficulties;
 
+    @ManyToMany
+    @JoinTable(
+            name = "lesson_questions",
+            joinColumns = @JoinColumn(name = "lesson_id"),
+            inverseJoinColumns = @JoinColumn(name = "question_id")
+    )
+    private List<Question> questions;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private UserEntity author;

@@ -1,8 +1,6 @@
 package com.suika.englishlearning.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
@@ -11,8 +9,13 @@ import java.util.List;
 @Data
 public class Question {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String question;
+
     @OneToMany
     private List<Answer> answers;
+
+    @ManyToMany(mappedBy = "questions")
+    private List<Lesson> lessons;
 }

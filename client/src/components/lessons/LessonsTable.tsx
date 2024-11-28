@@ -16,7 +16,7 @@ import { ErrorMessage } from "../common/ErrorMessage";
 import { DeleteConfirmationPopover } from "../common/DeleteConfirmationPopover";
 interface LessonsTableProps {
   lessons: Lesson[];
-  onDelete: (id: string) => Promise<void>;
+  onDelete?: (id: string) => Promise<void>;
   loading: boolean;
   error: string | null;
   limit?: number;
@@ -104,7 +104,7 @@ const LessonsTable = ({
                     if (onDelete) {
                       onDelete(lesson.id);
                     }
-                  }}
+                  }}  
                 />
               </TableCell>
             </TableRow>
