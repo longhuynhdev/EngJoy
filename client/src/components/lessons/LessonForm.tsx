@@ -30,8 +30,8 @@ import { LoadingSpinner } from "../common/LoadingSpinner";
 const formSchema = z.object({
   title: z.string().min(1),
   shortDescription: z.string().min(1),
-  duration: z.string().min(1),
-  points: z.string().min(1),
+  duration: z.union([z.string(), z.number()]).transform((val) => String(val)),
+  points: z.union([z.string(), z.number()]).transform((val) => String(val)),
   body: z.string().min(1),
   date: z.string(),
   categories: z.array(z.string()),

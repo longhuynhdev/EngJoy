@@ -78,6 +78,43 @@ export const useAddLesson = () => {
   return { addLesson, isLoading, error };
 };
 
+export const useEditLesson = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const editLesson = async (id: string, data: AddEditLessonData) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/v1/lessons/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to edit lesson");
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { editLesson, isLoading, error };
+};
+
 export const useDeleteLesson = () => {
   const deleteLesson = async (id: string): Promise<void> => {
     const response = await fetch(`http://localhost:8080/api/v1/lessons/${id}`, {

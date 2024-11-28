@@ -1,7 +1,8 @@
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
-
+import difficulties from "@/data/difficulties";
+import categories from "@/data/categories";
 interface FilterSidebarProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
@@ -10,14 +11,6 @@ interface FilterSidebarProps {
   selectedDifficulties: string[];
   setSelectedDifficulties: (difficulties: string[]) => void;
 }
-
-const difficulties = ["BEGINNER", "INTERMEDIATE", "ADVANCED"];
-const categories = [
-  "GRAMMAR",
-  "VOCABULARY",
-  "IDIOMS",
-  "WRITING",
-];
 
 const FilterSidebar = ({
   searchTerm,
@@ -59,17 +52,17 @@ const FilterSidebar = ({
       <ScrollArea className="h-[300px] mb-4 rounded-md border p-4">
         <h2 className="mb-2 text-lg font-semibold">Categories</h2>
         {categories.map((category) => (
-          <div key={category} className="flex items-center mb-2 space-x-2">
+          <div key={category.value} className="flex items-center mb-2 space-x-2">
             <Checkbox
               id={`category-${category}`}
-              checked={selectedCategories.includes(category)}
-              onCheckedChange={() => handleCategoryChange(category)}
+              checked={selectedCategories.includes(category.label)}
+              onCheckedChange={() => handleCategoryChange(category.label)}
             />
             <label
               htmlFor={`category-${category}`}
               className="text-sm font-medium"
             >
-              {category}
+              {category.label}
             </label>
           </div>
         ))}
@@ -79,17 +72,17 @@ const FilterSidebar = ({
       <ScrollArea className="h-[200px] rounded-md border p-4">
         <h2 className="mb-2 text-lg font-semibold">Difficulty</h2>
         {difficulties.map((difficulty) => (
-          <div key={difficulty} className="flex items-center mb-2 space-x-2">
+          <div key={difficulty.value} className="flex items-center mb-2 space-x-2">
             <Checkbox
               id={`difficulty-${difficulty}`}
-              checked={selectedDifficulties.includes(difficulty)}
-              onCheckedChange={() => handleDifficultyChange(difficulty)}
+              checked={selectedDifficulties.includes(difficulty.label)}
+              onCheckedChange={() => handleDifficultyChange(difficulty.label)}
             />
             <label
               htmlFor={`difficulty-${difficulty}`}
               className="text-sm font-medium"
             >
-              {difficulty}
+              {difficulty.label}
             </label>
           </div>
         ))}

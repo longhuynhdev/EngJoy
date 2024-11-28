@@ -1,4 +1,4 @@
-import { Lesson } from "@/types/lessons";
+import { Lesson } from "@/types/Lessons";
 import LessonCard from "./LessonCard";
 import { LoadingSpinner } from "../common/LoadingSpinner";
 import { ErrorMessage } from "../common/ErrorMessage";

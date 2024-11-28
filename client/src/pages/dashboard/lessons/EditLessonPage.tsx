@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import { LessonForm } from "@/components/lessons/LessonForm";
 import BackButton from "@/components/common/BackButton";
 import { useParams } from "react-router-dom";
-import { useLesson } from "@/hooks/useLessson";
+import { useLesson, useEditLesson } from "@/hooks/useLessson";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { ErrorMessage } from "@/components/common/ErrorMessage";
 import { useNavigate } from "react-router-dom";
@@ -12,43 +12,7 @@ const EditLessonPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { lesson, loading, error } = useLesson(id!);
-
-  const initialData: AddEditLessonData | undefined = lesson
-    ? {
-        title: lesson.title,
-        shortDescription: lesson.shortDescription,
-        body: lesson.body,
-        date: lesson.date,
-        categories: lesson.categories,
-        difficulties: lesson.difficulties,
-        duration: lesson.duration,
-        points: lesson.points,
-      }
-    : undefined;
-
-  const handleSubmit = async (data: AddEditLessonData) => {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/v1/lessons/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to update lesson");
-      }
-
-      toast.success(`Lesson: ${data.title} has been updated successfully`);
-      navigate("/dashboard/lessons");
-    } catch (error) {
-      toast.error("Failed to update lesson");
-    }
-  };
+  const { editLesson, isLoading: isEditing } = useEditLesson();
 
   if (loading) {
     return <LoadingSpinner />;
@@ -63,6 +27,27 @@ const EditLessonPage = () => {
     return <ErrorMessage message={error} />;
   }
 
+  const initialData: AddEditLessonData = {
+    title: lesson.title,
+    shortDescription: lesson.shortDescription,
+    body: lesson.body,
+    date: lesson.date,
+    categories: lesson.categories,
+    difficulties: lesson.difficulties,
+    duration: lesson.duration.toString(),
+    points: lesson.points.toString(),
+  };
+
+  const handleSubmit = async (data: AddEditLessonData) => {
+    try {
+      await editLesson(id!, data);
+      toast.success(`Lesson: ${data.title} has been updated successfully`);
+      navigate("/dashboard/lessons");
+    } catch (error) {
+      toast.error("Failed to update lesson: " + error.message);
+    }
+  };
+
   return (
     <>
       <BackButton link="/dashboard/lessons" text="Back to Lessons" />
@@ -71,7 +56,7 @@ const EditLessonPage = () => {
         initialData={initialData}
         onSubmit={handleSubmit}
         submitLabel="Update"
-        isLoading={loading}
+        isLoading={isEditing}
       />
     </>
   );
