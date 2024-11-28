@@ -1,7 +1,14 @@
 package com.suika.englishlearning.controller;
 
+import com.suika.englishlearning.exception.IncorrectPasswordException;
+import com.suika.englishlearning.exception.NameException;
+import com.suika.englishlearning.model.dto.user.ChangeNameDto;
+import com.suika.englishlearning.model.dto.user.ChangePasswordDto;
 import com.suika.englishlearning.model.dto.user.UserDto;
 import com.suika.englishlearning.service.UserEntityService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,18 +23,41 @@ public class UserEntityController {
     }
 
     @GetMapping(path = "getUser{email}")
-    public UserDto getUserByEmail(@PathVariable("email") String email) {
-        return userEntityService.getUserByEmail(email);
+    public ResponseEntity<UserDto> getUserByEmail(@PathVariable("email") String email) {
+        try {
+            return new ResponseEntity<>(userEntityService.getUserByEmail(email), HttpStatus.OK);
+        } catch (UsernameNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping(path = "getUsers")
-    public List<UserDto> getUsers() {
-        return userEntityService.getUsers();
+    public ResponseEntity<List<UserDto>> getUsers() {
+        return new ResponseEntity<>(userEntityService.getUsers(), HttpStatus.OK);
     }
 
-//    @PutMapping(path = "updateUserByName{name}")
-//    public void updateUserByName(@PathVariable("name") String name,
-//                                 @RequestParam(required = false) String email) {
-//        userEntity.setName(name);
-//    }
+    @PutMapping(path = "updateUserName")
+    public ResponseEntity<String> updateUserName(@RequestBody ChangeNameDto changeNameDto) {
+        try {
+            String response = userEntityService.updateUserName(changeNameDto);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+        catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (NameException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PutMapping(path = "updatePassword")
+    public ResponseEntity<String> updatePassword(@RequestBody ChangePasswordDto changePasswordDto) {
+        try {
+            String response = userEntityService.updatePassword(changePasswordDto);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+        catch (IncorrectPasswordException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }
