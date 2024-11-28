@@ -1,7 +1,5 @@
 package com.suika.englishlearning.model.dto.lesson;
 
-import com.suika.englishlearning.model.enums.Category;
-import com.suika.englishlearning.model.enums.Difficulty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,10 +11,12 @@ import java.util.List;
 public class LessonResponseDto {
     private int id;
     private String shortDescription;
+    private int duration;
+    private int points;
     private String title;
     private String body;
     private String author;
     private LocalDateTime date;
-    private List<Category> categories;
-    private List<Difficulty> difficulties;
+    private List<String> categories;
+    private List<String> difficulties;
 }

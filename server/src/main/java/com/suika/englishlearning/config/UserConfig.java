@@ -1,6 +1,5 @@
 package com.suika.englishlearning.config;
 
-import com.suika.englishlearning.model.UserEntity;
 import com.suika.englishlearning.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
