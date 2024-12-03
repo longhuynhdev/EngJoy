@@ -39,6 +39,10 @@ public class LessonService {
         UserEntity author = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
+        if(requestDto.getDuration() < 0 || requestDto.getPoints() < 0) {
+            throw new IllegalArgumentException("Duration and points must be non-negative");
+        }
+
         Lesson lesson = lessonMapper.toEntity(requestDto, author);
         return lessonMapper.toDto(lessonRepository.save(lesson));
     }

@@ -38,7 +38,7 @@ public class LessonController {
     public ResponseEntity<?> createLesson(@RequestBody LessonRequestDto requestDto, String userName) {
         try {
             return new ResponseEntity<>(lessonService.createLesson(requestDto, userName), HttpStatus.CREATED);
-        } catch (ResourceNotFoundException e) {
+        } catch (ResourceNotFoundException | IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

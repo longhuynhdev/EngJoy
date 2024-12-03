@@ -10,8 +10,12 @@ const AddLessonPage = () => {
   const { addLesson, isLoading } = useAddLesson();
   const handleSubmit = async (data: AddEditLessonData) => {
     try {
-      console.log(data);
-      await addLesson(data);
+      const dataWithDate = {
+        ...data,
+        date: new Date().toISOString()
+      };
+      console.log(dataWithDate);
+      await addLesson(dataWithDate);
       toast.success(`Lesson: ${data.title} has been uploaded successfully`);
       setTimeout(() => {
         navigate("/dashboard/lessons");
