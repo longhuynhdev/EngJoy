@@ -5,12 +5,15 @@ import com.suika.englishlearning.mapper.LessonMapper;
 import com.suika.englishlearning.model.Category;
 import com.suika.englishlearning.model.Difficulty;
 import com.suika.englishlearning.model.Lesson;
+import com.suika.englishlearning.model.Question;
 import com.suika.englishlearning.model.UserEntity;
+import com.suika.englishlearning.model.dto.lesson.LessonDetailsDto;
 import com.suika.englishlearning.model.dto.lesson.LessonRequestDto;
 import com.suika.englishlearning.model.dto.lesson.LessonResponseDto;
 import com.suika.englishlearning.repository.CategoryRepository;
 import com.suika.englishlearning.repository.DifficultyRepository;
 import com.suika.englishlearning.repository.LessonRepository;
+import com.suika.englishlearning.repository.QuestionRepository;
 import com.suika.englishlearning.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -26,20 +29,43 @@ public class LessonService {
     private final CategoryRepository categoryRepository;
     private final DifficultyRepository difficultyRepository;
     private final LessonMapper lessonMapper;
+    private final QuestionRepository questionRepository;
 
-    public LessonService(LessonRepository lessonRepository, UserRepository userRepository, LessonMapper lessonMapper, CategoryRepository categoryRepository, DifficultyRepository difficultyRepository) {
+    public LessonService(LessonRepository lessonRepository, UserRepository userRepository, LessonMapper lessonMapper,
+            CategoryRepository categoryRepository, DifficultyRepository difficultyRepository,
+            QuestionRepository questionRepository) {
         this.lessonRepository = lessonRepository;
         this.userRepository = userRepository;
         this.lessonMapper = lessonMapper;
         this.categoryRepository = categoryRepository;
         this.difficultyRepository = difficultyRepository;
+        this.questionRepository = questionRepository;
+    }
+
+    public void assignQuestionsToLesson(Integer lessonId, List<Integer> questionIds) {
+        if (questionIds == null || questionIds.isEmpty()) {
+            throw new IllegalArgumentException("Question IDs list cannot be empty");
+        }
+
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new ResourceNotFoundException("Lesson not found"));
+
+        List<Question> questions = new ArrayList<>();
+        for (int questionId : questionIds) {
+            Question question = questionRepository.findById(questionId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
+            questions.add(question);
+        }
+
+        lesson.setQuestions(questions);
+        lessonRepository.save(lesson);
     }
 
     public LessonResponseDto createLesson(LessonRequestDto requestDto, String userName) {
         UserEntity author = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        if(requestDto.getDuration() < 0 || requestDto.getPoints() < 0) {
+        if (requestDto.getDuration() < 0 || requestDto.getPoints() < 0) {
             throw new IllegalArgumentException("Duration and points must be non-negative");
         }
 
@@ -92,14 +118,14 @@ public class LessonService {
     public List<LessonResponseDto> getLessons() {
         List<Lesson> lessons = lessonRepository.findAll();
         List<LessonResponseDto> lessonResponseDtos = new ArrayList<>();
-        for(Lesson lesson : lessons) {
+        for (Lesson lesson : lessons) {
             lessonResponseDtos.add(lessonMapper.toDto(lesson));
         }
-        return  lessonResponseDtos;
+        return lessonResponseDtos;
     }
 
-    public LessonResponseDto getLesson(Integer id) {
-        return lessonMapper.toDto(lessonRepository.findById(id)
+    public LessonDetailsDto getLesson(Integer id) {
+        return lessonMapper.toDtoDetails(lessonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Lesson not found")));
     }
 
@@ -108,4 +134,5 @@ public class LessonService {
             throw new ResourceNotFoundException("Lesson not found");
         }
         lessonRepository.deleteById(id);
-    }}
+    }
+}

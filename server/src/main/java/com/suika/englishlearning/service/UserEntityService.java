@@ -24,7 +24,6 @@ public class UserEntityService {
     @Autowired
     public PasswordEncoder passwordEncoder;
 
-    @Autowired
     public UserEntityService(UserRepository userRepository) {
         this.userRepository = userRepository;
         this.userMapper = new UserMapper();

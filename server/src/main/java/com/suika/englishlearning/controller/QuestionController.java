@@ -1,6 +1,5 @@
 package com.suika.englishlearning.controller;
 
-import com.suika.englishlearning.model.Question;
 import com.suika.englishlearning.model.dto.QuestionDto;
 import com.suika.englishlearning.service.QuestionService;
 import org.springframework.http.HttpStatus;
@@ -19,13 +18,13 @@ public class QuestionController {
     }
 
     @GetMapping
-    public List<Question> getAllQuestions() {
+    public List<QuestionDto> getAllQuestions() {
         return questionService.getAllQuestion();
     }
 
     @PostMapping
-    public ResponseEntity<QuestionDto> createLesson(@RequestBody QuestionDto questionDto) {
-        return new ResponseEntity<>(questionService.createLesson(questionDto), HttpStatus.CREATED);
+    public ResponseEntity<List<QuestionDto>> createQuestions(@RequestBody List<QuestionDto> questionDtos) {
+        return new ResponseEntity<>(questionService.createQuestions(questionDtos), HttpStatus.CREATED);
     }
 
 }

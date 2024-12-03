@@ -1,6 +1,5 @@
 package com.suika.englishlearning.model.dto.user;
 
-import com.suika.englishlearning.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

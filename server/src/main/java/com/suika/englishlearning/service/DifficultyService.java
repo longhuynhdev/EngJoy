@@ -2,13 +2,10 @@ package com.suika.englishlearning.service;
 
 import com.suika.englishlearning.exception.ResourceNotFoundException;
 import com.suika.englishlearning.mapper.DifficultyMapper;
-import com.suika.englishlearning.model.Category;
 import com.suika.englishlearning.model.Difficulty;
-import com.suika.englishlearning.model.dto.category.CategoryDto;
 import com.suika.englishlearning.model.dto.difficulty.DifficultyDto;
 import com.suika.englishlearning.repository.DifficultyRepository;
 import jakarta.persistence.EntityExistsException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +19,6 @@ public class DifficultyService {
     private final DifficultyRepository difficultyRepository;
     private final DifficultyMapper difficultyMapper;
 
-    @Autowired
     public DifficultyService(DifficultyRepository difficultyRepository) {
         this.difficultyRepository = difficultyRepository;
         difficultyMapper = new DifficultyMapper();
