@@ -8,7 +8,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class CategoryMapper {
+public class CategoryMapper implements Mapper<Category, CategoryDto> {
+
+    @Override
+    public List<Category> toEntityList(List<CategoryDto> dtoList) {
+        return dtoList.stream().map(this::toEntity).collect(Collectors.toList());
+    }
+
+    @Override
     public CategoryDto toDto(Category categoryEntity) {
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setName(categoryEntity.getName());
@@ -17,6 +24,7 @@ public class CategoryMapper {
         return categoryDto;
     }
 
+    @Override
     public Category toEntity(CategoryDto categoryDto) {
         Category category = new Category();
         category.setName(categoryDto.getName());
@@ -25,6 +33,7 @@ public class CategoryMapper {
         return category;
     }
 
+    @Override
     public List<CategoryDto> toDtoList(List<Category> categoryEntityList) {
         return categoryEntityList.stream().map(this::toDto).collect(Collectors.toList());
     }
