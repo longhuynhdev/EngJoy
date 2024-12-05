@@ -1,11 +1,9 @@
 package com.suika.englishlearning.controller;
 
 import com.suika.englishlearning.exception.ResourceNotFoundException;
-import com.suika.englishlearning.model.Difficulty;
 import com.suika.englishlearning.model.dto.difficulty.DifficultyDto;
 import com.suika.englishlearning.service.DifficultyService;
 import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

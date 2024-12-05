@@ -40,7 +40,11 @@ const EditLessonPage = () => {
 
   const handleSubmit = async (data: AddEditLessonData) => {
     try {
-      await editLesson(id!, data);
+      const dataWithDate = {
+        ...data,
+        date: new Date().toISOString(),
+      };
+      await editLesson(id!, dataWithDate);
       toast.success(`Lesson: ${data.title} has been updated successfully`);
       navigate("/dashboard/lessons");
     } catch (error) {

@@ -12,15 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import difficulties from "@/data/difficulties";
 import categories from "@/data/categories";
 import { MultiSelect } from "@/components/ui/multi-select";
@@ -30,8 +21,12 @@ import { LoadingSpinner } from "../common/LoadingSpinner";
 const formSchema = z.object({
   title: z.string().min(1),
   shortDescription: z.string().min(1),
-  duration: z.union([z.string(), z.number()]).transform((val) => String(val)),
-  points: z.union([z.string(), z.number()]).transform((val) => String(val)),
+  duration: z
+    .union([z.string(), z.number().min(1)])
+    .transform((val) => String(val)),
+  points: z
+    .union([z.string(), z.number().min(1)])
+    .transform((val) => String(val)),
   body: z.string().min(1),
   date: z.string(),
   categories: z.array(z.string()),
@@ -125,7 +120,12 @@ export const LessonForm = ({
                 Duration
               </FormLabel>
               <FormControl>
-                <Input type="number" placeholder="Enter duration" {...field} />
+                <Input
+                  type="number"
+                  placeholder="Enter duration"
+                  min={0}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -140,7 +140,12 @@ export const LessonForm = ({
                 Points
               </FormLabel>
               <FormControl>
-                <Input type="number" placeholder="Enter points" {...field} />
+                <Input
+                  type="number"
+                  placeholder="Enter points"
+                  min={0}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -166,52 +171,7 @@ export const LessonForm = ({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="date"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-white">
-                Date
-              </FormLabel>
-              <FormControl>
-                <div>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[280px] justify-start text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="w-4 h-4 mr-2" />
-                        {field.value ? (
-                          format(new Date(field.value), "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={
-                          field.value ? new Date(field.value) : undefined
-                        }
-                        onSelect={(date) => {
-                          field.onChange(date?.toISOString());
-                        }}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         <FormField
           control={form.control}
           name="categories"

@@ -1,6 +1,7 @@
 package com.suika.englishlearning.controller;
 
 import com.suika.englishlearning.exception.ResourceNotFoundException;
+import com.suika.englishlearning.model.dto.lesson.LessonDetailsDto;
 import com.suika.englishlearning.model.dto.lesson.LessonRequestDto;
 import com.suika.englishlearning.model.dto.lesson.LessonResponseDto;
 import com.suika.englishlearning.service.LessonService;
@@ -25,8 +26,20 @@ public class LessonController {
         return new ResponseEntity<>(lessonService.getLessons(), HttpStatus.OK);
     }
 
+    //Assing questions to lesson
+    @PutMapping("/{lessonId}/questions")
+    public ResponseEntity<?> assignQuestionsToLesson(@PathVariable Integer lessonId, @RequestBody List<Integer> questionIds) {
+        try {
+            lessonService.assignQuestionsToLesson(lessonId, questionIds);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
     @GetMapping("/{id}")
-    public ResponseEntity<LessonResponseDto> getLesson(@PathVariable Integer id) {
+    public ResponseEntity<LessonDetailsDto> getLesson(@PathVariable Integer id) {
         try {
             return new ResponseEntity<>(lessonService.getLesson(id), HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
@@ -38,7 +51,7 @@ public class LessonController {
     public ResponseEntity<?> createLesson(@RequestBody LessonRequestDto requestDto, String userName) {
         try {
             return new ResponseEntity<>(lessonService.createLesson(requestDto, userName), HttpStatus.CREATED);
-        } catch (ResourceNotFoundException e) {
+        } catch (ResourceNotFoundException | IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

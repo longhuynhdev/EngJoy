@@ -1,21 +1,22 @@
 package com.suika.englishlearning.model.dto.lesson;
 
+import com.suika.englishlearning.model.Question;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-public class LessonResponseDto {
+public class LessonDetailsDto {
     private int id;
     private String shortDescription;
     private int duration;
     private int points;
     private String title;
+    private String body;
     private String author;
     private LocalDateTime date;
     private List<String> categories;
     private List<String> difficulties;
+    private List<Question> questions;
 }
