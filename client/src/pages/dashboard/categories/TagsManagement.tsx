@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 import categoriesData from "@/data/categories";
 import difficultiesData from "@/data/difficulties";
+import { Button } from "@/components/ui/button"; 
+import BackButton from "@/components/common/BackButton";
+import { Link } from "react-router-dom";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"; 
+
+const SerialNumber = ({ index }: { index: number }) => (
+  <TableCell>{index + 1}</TableCell>
+);
 
 const TagsManagement = () => {
   const [categories, setCategories] = useState<string[]>([]);
@@ -13,63 +21,88 @@ const TagsManagement = () => {
     setCategories(allCategories);
     setDifficulties(allDifficulties);
   }, []);
+  
 
   return (
     <div className="space-y-10">
+      {/* Back button */}
+      <div className="flex justify-start">
+        <BackButton link="/dashboard" text="Back to Dashboard" />
+      </div>
+
+
+      {/* Categories section */}
       <section>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Categories</h2>
-          <button className="px-4 py-2 bg-blue-500 text-white rounded">Add new category</button>
+          <Link to="/dashboard/category/addCategory">
+            <Button className="px-4 py-2 text-xs font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
+              Add new category
+            </Button>
+          </Link>
         </div>
-        <table className="w-full border-collapse border border-gray-300">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border border-gray-300 px-4 py-2">STT</th>
-              <th className="border border-gray-300 px-4 py-2">Name</th>
-              <th className="border border-gray-300 px-4 py-2">View</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>STT</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {categories.map((category, index) => (
-              <tr key={index}>
-                <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
-                <td className="border border-gray-300 px-4 py-2">{category}</td>
-                <td className="border border-gray-300 px-4 py-2">
-                  <button className="px-3 py-1 bg-blue-500 text-white rounded mr-2">Edit</button>
-                  <button className="px-3 py-1 bg-red-500 text-white rounded">Delete</button>
-                </td>
-              </tr>
+              <TableRow key={index}>
+                <SerialNumber index={index} />
+                <TableCell>{category}</TableCell>
+                <TableCell>
+                  <Link to={`/edit-category/${category}`}>
+                    <Button className="px-4 py-2 text-xs font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
+                      Edit
+                    </Button>
+                  </Link>
+                  <Button variant="destructive">Delete</Button>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </section>
 
+      {/* Difficulty section */}
       <section>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Difficulty</h2>
-          <button className="px-4 py-2 bg-blue-500 text-white rounded">Add new difficulty</button>
+          <Link to="/dashboard/category/addDifficulty">
+            <Button className="px-4 py-2 text-xs font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
+              Add new difficulty
+            </Button>
+          </Link>
         </div>
-        <table className="w-full border-collapse border border-gray-300">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border border-gray-300 px-4 py-2">STT</th>
-              <th className="border border-gray-300 px-4 py-2">Name</th>
-              <th className="border border-gray-300 px-4 py-2">View</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>STT</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {difficulties.map((difficulty, index) => (
-              <tr key={index}>
-                <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
-                <td className="border border-gray-300 px-4 py-2">{difficulty}</td>
-                <td className="border border-gray-300 px-4 py-2">
-                  <button className="px-3 py-1 bg-blue-500 text-white rounded mr-2">Edit</button>
-                  <button className="px-3 py-1 bg-red-500 text-white rounded">Delete</button>
-                </td>
-              </tr>
+              <TableRow key={index}>
+                <SerialNumber index={index} />
+                <TableCell>{difficulty}</TableCell>
+                <TableCell>
+                  <Link to={`/edit-difficulty/${difficulty}`}>
+                    <Button className="px-4 py-2 text-xs font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
+                      Edit
+                    </Button>
+                  </Link>
+                  <Button variant="destructive">Delete</Button>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </section>
     </div>
   );
