@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class DifficultyMapper {
+public class DifficultyMapper implements Mapper<Difficulty, DifficultyDto> {
+    @Override
     public DifficultyDto toDto(Difficulty difficultyEntity) {
         DifficultyDto difficultyDto = new DifficultyDto();
         difficultyDto.setName(difficultyEntity.getName());
@@ -17,6 +18,7 @@ public class DifficultyMapper {
         return difficultyDto;
     }
 
+    @Override
     public Difficulty toEntity(DifficultyDto difficultyDto) {
         Difficulty difficulty = new Difficulty();
         difficulty.setName(difficultyDto.getName());
@@ -25,7 +27,13 @@ public class DifficultyMapper {
         return difficulty;
     }
 
+    @Override
     public List<DifficultyDto> toDtoList(List<Difficulty> difficultyEntityList) {
         return difficultyEntityList.stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Difficulty> toEntityList(List<DifficultyDto> dtoList) {
+        return dtoList.stream().map(this::toEntity).collect(Collectors.toList());
     }
 }

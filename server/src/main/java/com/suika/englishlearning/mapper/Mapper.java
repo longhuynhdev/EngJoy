@@ -1,4 +1,10 @@
 package com.suika.englishlearning.mapper;
 
-public interface Mapper {
+import java.util.List;
+
+public interface Mapper <E, D>{
+    D toDto(E entity);
+    E toEntity(D dto);
+    List<D> toDtoList(List<E> entityList);
+    List<E> toEntityList(List<D> dtoList);
 }

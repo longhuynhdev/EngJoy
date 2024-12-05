@@ -8,17 +8,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class UserMapper {
+public class UserMapper  implements Mapper<UserEntity, UserDto> {
+    @Override
     public UserDto toDto(UserEntity userEntity) {
         UserDto userDto = new UserDto();
         userDto.setName(userEntity.getName());
         userDto.setEmail(userEntity.getEmail());
         userDto.setPassword(userEntity.getPassword());
         userDto.setRole(userEntity.getRole());
-
         return userDto;
     }
 
+    @Override
     public UserEntity toEntity(UserDto userDto) {
         UserEntity userEntity = new UserEntity();
         userEntity.setName(userDto.getName());
@@ -29,7 +30,13 @@ public class UserMapper {
         return userEntity;
     }
 
+    @Override
     public List<UserDto> toDtoList(List<UserEntity> userEntityList) {
         return userEntityList.stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserEntity> toEntityList(List<UserDto> dtoList) {
+        return dtoList.stream().map(this::toEntity).collect(Collectors.toList());
     }
 }
