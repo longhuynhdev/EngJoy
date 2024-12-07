@@ -22,10 +22,10 @@ const formSchema = z.object({
   title: z.string().min(1),
   shortDescription: z.string().min(1),
   duration: z
-    .union([z.string(), z.number().min(1)])
+    .union([z.string().min(1), z.number().min(1)])
     .transform((val) => String(val)),
   points: z
-    .union([z.string(), z.number().min(1)])
+    .union([z.string().min(1), z.number().min(1)])
     .transform((val) => String(val)),
   body: z.string().min(1),
   date: z.string(),
