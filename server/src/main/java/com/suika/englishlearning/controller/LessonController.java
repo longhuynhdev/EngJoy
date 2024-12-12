@@ -20,13 +20,13 @@ public class LessonController {
     public LessonController(LessonService lessonService) {
         this.lessonService = lessonService;
     }
-    //TODO: Add filter by categories, difficulties
+
     @GetMapping
     public ResponseEntity<List<LessonResponseDto>> getLessons() {
         return new ResponseEntity<>(lessonService.getLessons(), HttpStatus.OK);
     }
 
-    //Assing questions to lesson
+    //Assigning questions to lesson
     @PutMapping("/{lessonId}/questions")
     public ResponseEntity<?> assignQuestionsToLesson(@PathVariable Integer lessonId, @RequestBody List<Integer> questionIds) {
         try {
@@ -44,6 +44,17 @@ public class LessonController {
             return new ResponseEntity<>(lessonService.getLesson(id), HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<LessonResponseDto>> filterLessons(
+            @RequestParam(required = false) List<String> categories,
+            @RequestParam(required = false) List<String> difficulties) {
+        try {
+            return new ResponseEntity<>(lessonService.filterLessons(categories, difficulties), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

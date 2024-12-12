@@ -37,17 +37,17 @@ public class EnglishLearningApplication implements CommandLineRunner {
                 new Role("ADMIN")
         );
         List<Category> categories = List.of(
-                new Category(1,"Vocabulary"),
-                new Category(2,"Reading"),
-                new Category(3,"Grammar"),
-                new Category(4,"Listening"),
-                new Category(6,"Writing")
+                new Category(1,"Vocabulary", "Learn about vocabularies"),
+                new Category(2,"Reading", "Learn about reading"),
+                new Category(3,"Grammar", "Learn about grammar"),
+                new Category(4,"Listening", "Learn about listening"),
+                new Category(6,"Writing", "Learn about writing")
         );
 
         List<Difficulty> difficulties = List.of(
-                new Difficulty(1,"Beginner"),
-                new Difficulty(2,"Intermediate"),
-                new Difficulty(3,"Advanced")
+                new Difficulty(1,"Beginner", "For beginners"),
+                new Difficulty(2,"Intermediate", "For intermediate learners"),
+                new Difficulty(3,"Advanced", "For advanced learners")
         );
 
         // Check if the entities already exist in the database

@@ -18,6 +18,7 @@ import com.suika.englishlearning.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -134,5 +135,57 @@ public class LessonService {
             throw new ResourceNotFoundException("Lesson not found");
         }
         lessonRepository.deleteById(id);
+    }
+
+    public List<LessonResponseDto> filterLessons(List<String> categories, List<String> difficulties) {
+        // Validate categories
+        if (categories != null && !categories.isEmpty()) {
+            for (String category : categories) {
+                if (!categoryRepository.existsByName(category))
+                    throw new IllegalArgumentException("Category not existing: " + category);
+            }
+        }
+
+        // Validate difficulties
+        if (difficulties != null && !difficulties.isEmpty()) {
+            for (String difficulty : difficulties) {
+                if (!difficultyRepository.existsByName(difficulty)) {
+                    throw new IllegalArgumentException("Difficulty not existing: " + difficulty);
+                }
+            }
+        }
+
+        List<Lesson> filteredLessons;
+
+        if ((categories == null || categories.isEmpty()) && (difficulties == null || difficulties.isEmpty())) {
+            // Return all lessons if no filters are provided
+            filteredLessons = lessonRepository.findAll();
+
+        } else if (categories != null && difficulties != null) {
+            // Filter by both categories and difficulties
+            filteredLessons = lessonRepository.findByCategoriesAndDifficulties(categories, difficulties)
+                    .stream()
+                    .flatMap(Optional::stream) // Extract non-empty Optional values
+                    .collect(Collectors.toList());
+
+        } else if (categories != null) {
+            // Filter by categories only
+            filteredLessons = lessonRepository.findByCategories(categories)
+                    .stream()
+                    .flatMap(Optional::stream) // Extract non-empty Optional values
+                    .collect(Collectors.toList());
+
+        } else {
+            // Filter by difficulties only
+            filteredLessons = lessonRepository.findByDifficulties(difficulties)
+                    .stream()
+                    .flatMap(Optional::stream) // Extract non-empty Optional values
+                    .collect(Collectors.toList());
+        }
+
+        // Map quizzes to DTOs
+        return filteredLessons.stream()
+                .map(lessonMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

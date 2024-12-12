@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface DifficultyRepository extends JpaRepository<Difficulty, Integer> {
     Optional<Difficulty> findByName(String name);
+    Boolean existsByName(String name);
 }
