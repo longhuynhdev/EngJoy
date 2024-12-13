@@ -3,7 +3,7 @@ package com.suika.englishlearning.mapper;
 import com.suika.englishlearning.model.Answer;
 import com.suika.englishlearning.model.Question;
 import com.suika.englishlearning.model.dto.AnswerDto;
-import com.suika.englishlearning.model.dto.QuestionDto;
+import com.suika.englishlearning.model.dto.question.QuestionDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

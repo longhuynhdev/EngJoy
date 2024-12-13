@@ -1,6 +1,6 @@
 package com.suika.englishlearning.controller;
 
-import com.suika.englishlearning.model.dto.QuestionDto;
+import com.suika.englishlearning.model.dto.question.QuestionDto;
 import com.suika.englishlearning.service.QuestionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

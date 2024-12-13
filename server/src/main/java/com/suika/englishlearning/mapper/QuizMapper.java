@@ -16,10 +16,14 @@ import java.util.stream.Collectors;
 public class QuizMapper implements Mapper<Quiz, QuizResponseDto> {
     private final CategoryRepository categoryRepository;
     private final DifficultyRepository difficultyRepository;
+    private final QuestionMapper questionMapper;
 
-    public QuizMapper(CategoryRepository categoryRepository, DifficultyRepository difficultyRepository) {
+    public QuizMapper(CategoryRepository categoryRepository,
+                      DifficultyRepository difficultyRepository,
+                      QuestionMapper questionMapper) {
         this.categoryRepository = categoryRepository;
         this.difficultyRepository = difficultyRepository;
+        this.questionMapper = questionMapper;
     }
 
     @Override
@@ -98,7 +102,8 @@ public class QuizMapper implements Mapper<Quiz, QuizResponseDto> {
         dto.setDifficulties(entity.getDifficulties().stream()
                 .map(Difficulty::getName)
                 .collect(Collectors.toList()));
-        dto.setQuestions(entity.getQuestions());
+        dto.setQuestions(questionMapper.toDtoList(entity.getQuestions()));
+
         return dto;
     }
 }

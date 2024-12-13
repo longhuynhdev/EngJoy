@@ -4,7 +4,7 @@ import com.suika.englishlearning.exception.ResourceNotFoundException;
 import com.suika.englishlearning.mapper.QuestionMapper;
 import com.suika.englishlearning.model.Answer;
 import com.suika.englishlearning.model.Question;
-import com.suika.englishlearning.model.dto.QuestionDto;
+import com.suika.englishlearning.model.dto.question.QuestionDto;
 import com.suika.englishlearning.repository.AnswerRepository;
 import com.suika.englishlearning.repository.QuestionRepository;
 import org.springframework.stereotype.Service;

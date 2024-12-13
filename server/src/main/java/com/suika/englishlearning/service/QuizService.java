@@ -4,13 +4,13 @@ import com.suika.englishlearning.exception.DuplicateResourceException;
 import com.suika.englishlearning.exception.ResourceNotFoundException;
 import com.suika.englishlearning.mapper.QuestionMapper;
 import com.suika.englishlearning.mapper.QuizMapper;
+import com.suika.englishlearning.mapper.QuizResultMapper;
 import com.suika.englishlearning.model.*;
-import com.suika.englishlearning.model.dto.QuestionDto;
-import com.suika.englishlearning.model.dto.quiz.QuizDetailsDto;
-import com.suika.englishlearning.model.dto.quiz.QuizRequestDto;
-import com.suika.englishlearning.model.dto.quiz.QuizResponseDto;
+import com.suika.englishlearning.model.dto.question.QuestionDto;
+import com.suika.englishlearning.model.dto.question.QuestionResultDto;
+import com.suika.englishlearning.model.dto.quiz.*;
 import com.suika.englishlearning.repository.*;
-import org.springframework.dao.DuplicateKeyException;
+import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,24 +19,28 @@ import java.util.stream.Collectors;
 @Service
 public class QuizService {
     private final QuizRepository quizRepository;
+    private final QuizResultRepository quizResultRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final DifficultyRepository difficultyRepository;
     private final QuestionRepository questionRepository;
     private final QuizMapper quizMapper;
     private final QuestionMapper questionMapper;
+    private final QuizResultMapper quizResultMapper;
 
     private QuizService(QuizRepository quizRepository, UserRepository userRepository,
                         CategoryRepository categoryRepository, DifficultyRepository difficultyRepository,
-                        QuizMapper lessonMapper, QuestionRepository questionRepository, QuizMapper quizMapper, QuestionMapper questionMapper)
+                        QuizMapper lessonMapper, QuizResultRepository quizResultRepository, QuestionRepository questionRepository, QuizMapper quizMapper, QuestionMapper questionMapper, QuizResultMapper quizResultMapper)
     {
         this.quizRepository = quizRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.difficultyRepository = difficultyRepository;
+        this.quizResultRepository = quizResultRepository;
         this.questionRepository = questionRepository;
         this.quizMapper = quizMapper;
         this.questionMapper = questionMapper;
+        this.quizResultMapper = quizResultMapper;
     }
 
     public List<QuizDetailsDto> getQuizzes()
@@ -216,5 +220,80 @@ public class QuizService {
         return filteredQuizzes.stream()
                 .map(quizMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public Pair<String, Integer> processQuizAttempt(QuizAttemptRequestDto quizAttemptDto) {
+        // Fetch quiz and user
+        Quiz quiz = quizRepository.findById(quizAttemptDto.getQuizId())
+                .orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
+
+        UserEntity user = userRepository.findByEmail(quizAttemptDto.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        // Validate the questions and answers
+        List<QuestionResult> questionResults = new ArrayList<>();
+        for (QuestionResultDto questionResultDto : quizAttemptDto.getQuestionResults()) {
+            Question question = quiz.getQuestions().stream()
+                    .filter(q -> q.getId() == questionResultDto.getQuestionId())
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid question ID"));
+
+            Answer selectedAnswer = question.getAnswers().stream()
+                    .filter(a -> a.getId() == questionResultDto.getAnswerId())
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid answer ID"));
+
+            // Add to question results
+            QuestionResult questionResult = new QuestionResult();
+            questionResult.setQuestion(question);
+            questionResult.setSelectedAnswer(selectedAnswer);
+
+            questionResults.add(questionResult);
+        }
+
+        // Create and save QuizResult
+        QuizResult quizResult = new QuizResult();
+        quizResult.setQuiz(quiz);
+        quizResult.setUser(user);
+        quizResult.setCompletedAt(quizAttemptDto.getCompletedAt());
+        quizResult.setQuestionResults(questionResults);
+
+        quizResultRepository.save(quizResult);
+
+        return new Pair<>("Quiz attempt submitted successfully", quizResult.getScore());
+    }
+
+    public List<QuizAttemptResponseDto> getQuizAttemptsByQuizId(int quizId, String username) {
+        // Fetch quiz
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
+
+        // Fetch user
+        UserEntity user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        // Fetch quiz attempts for the user
+        List<QuizResult> results = quizResultRepository.findByQuizAndUser(quiz, user)
+                .stream()
+                .flatMap(Optional::stream) // Extract non-empty Optional values
+                .collect(Collectors.toList());
+
+        // Map results to DTOs
+        return quizResultMapper.toDtoList(results);
+    }
+
+    public List<QuizAttemptResponseDto> getAllQuizAttempts(String username) {
+        // Fetch user
+        UserEntity user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        // Fetch quiz attempts for the user
+        List<QuizResult> results = quizResultRepository.findByUser(user)
+                .stream()
+                .flatMap(Optional::stream) // Extract non-empty Optional values
+                .collect(Collectors.toList());
+
+        // Map results to DTOs
+        return quizResultMapper.toDtoList(results);
     }
 }
