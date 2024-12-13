@@ -1,6 +1,6 @@
 package com.suika.englishlearning.model.dto.quiz;
 
-import com.suika.englishlearning.model.Question;
+import com.suika.englishlearning.model.dto.question.QuestionDto;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -18,5 +18,5 @@ public class QuizDetailsDto {
     private LocalDateTime date;
     private List<String> categories;
     private List<String> difficulties;
-    private List<Question> questions;
+    private List<QuestionDto> questions;
 }
