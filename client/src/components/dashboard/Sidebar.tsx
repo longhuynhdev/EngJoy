@@ -39,7 +39,7 @@ const Sidebar = () => {
           </CommandItem>
           <CommandItem>
             <Folder className="mr-2 h-4 w-4" />
-            <Link to="/dashboard/categories">Categories</Link>
+            <Link to="/dashboard/tags">Tags</Link>
           </CommandItem>
           <CommandItem>
             <Quote className="mr-2 h-4 w-4" />
