@@ -38,7 +38,7 @@ const DashBoardPage = () => {
           icon={<BookCheck className="text-slate-500" size={72} />}
         />
         <DashboardCard
-          title="Categories"
+          title="Tags"
           count={5}
           icon={<Folder className="text-slate-500" size={72} />}
         />
