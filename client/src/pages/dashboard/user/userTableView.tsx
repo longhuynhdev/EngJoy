@@ -69,7 +69,7 @@ const UserTableView = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => navigate(`/admin/user-management/${user.id}`)} // Điều hướng đến trang quản lý người dùng
+                    onClick={() => navigate(`user-management/${user.email}`)} // Điều hướng đến trang quản lý người dùng
                   >
                     Manage
                   </Button>
