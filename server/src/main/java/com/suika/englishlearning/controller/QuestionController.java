@@ -1,5 +1,6 @@
 package com.suika.englishlearning.controller;
 
+import com.suika.englishlearning.exception.ResourceNotFoundException;
 import com.suika.englishlearning.model.dto.question.QuestionDto;
 import com.suika.englishlearning.service.QuestionService;
 import org.springframework.http.HttpStatus;
@@ -22,9 +23,38 @@ public class QuestionController {
         return questionService.getAllQuestion();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<QuestionDto> getQuestion(@PathVariable Integer id) {
+        try {
+            return new ResponseEntity<>(questionService.getQuestionById(id), HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<List<QuestionDto>> createQuestions(@RequestBody List<QuestionDto> questionDtos) {
         return new ResponseEntity<>(questionService.createQuestions(questionDtos), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<QuestionDto> editQuestion(@PathVariable Integer id, @RequestBody QuestionDto questionDto) {
+        try {
+            QuestionDto updatedQuestion = questionService.editQuestion(id, questionDto);
+            return new ResponseEntity<>(updatedQuestion, HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteQuestion(@PathVariable Integer id) {
+        try {
+            questionService.DeleteQuestion(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }

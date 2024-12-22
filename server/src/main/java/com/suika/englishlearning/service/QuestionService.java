@@ -4,6 +4,7 @@ import com.suika.englishlearning.exception.ResourceNotFoundException;
 import com.suika.englishlearning.mapper.QuestionMapper;
 import com.suika.englishlearning.model.Answer;
 import com.suika.englishlearning.model.Question;
+import com.suika.englishlearning.model.dto.AnswerDto;
 import com.suika.englishlearning.model.dto.question.QuestionDto;
 import com.suika.englishlearning.repository.AnswerRepository;
 import com.suika.englishlearning.repository.QuestionRepository;
@@ -44,5 +45,50 @@ public class QuestionService {
         }
 
         return questionMapper.toDtoList(questionRepository.saveAll(questions));
+    }
+
+    public QuestionDto editQuestion(Integer id, QuestionDto questionDto) {
+        Question existingQuestion = questionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found with id: " + id));
+
+        boolean isChanged = false;
+
+        if (!existingQuestion.getQuestion().equals(questionDto.getQuestion())) {
+            existingQuestion.setQuestion(questionDto.getQuestion());
+            isChanged = true;
+        }
+
+        List<Answer> existingAnswers = existingQuestion.getAnswers();
+        List<AnswerDto> newAnswerDtos = questionDto.getAnswers();
+
+        if (existingAnswers.size() != newAnswerDtos.size()) {
+            existingQuestion.setAnswers(questionMapper.toAnswerEntityList(newAnswerDtos));
+            isChanged = true;
+        } else {
+            for (int i = 0; i < existingAnswers.size(); i++) {
+                Answer existingAnswer = existingAnswers.get(i);
+                AnswerDto newAnswerDto = newAnswerDtos.get(i);
+
+                if (!existingAnswer.getAnswer().equals(newAnswerDto.getAnswer()) ||
+                        !existingAnswer.getExplanation().equals(newAnswerDto.getExplanation()) ||
+                        existingAnswer.isCorrect() != newAnswerDto.isCorrect()) {
+                    existingAnswer.setAnswer(newAnswerDto.getAnswer());
+                    existingAnswer.setExplanation(newAnswerDto.getExplanation());
+                    existingAnswer.setCorrect(newAnswerDto.isCorrect());
+                    isChanged = true;
+                }
+            }
+        }
+
+        if (isChanged) {
+            questionRepository.save(existingQuestion);
+        }
+
+        return questionMapper.toDto(existingQuestion);
+    }
+    
+    public void DeleteQuestion(Integer id) {
+        Question question = questionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Question not found with id: " + id));
+        questionRepository.delete(question);
     }
 }

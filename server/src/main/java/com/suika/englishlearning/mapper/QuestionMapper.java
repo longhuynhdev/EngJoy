@@ -60,4 +60,17 @@ public class QuestionMapper implements Mapper<Question, QuestionDto> {
     public List<Question> toEntityList(List<QuestionDto> questionDtos) {
         return questionDtos.stream().map(this::toEntity).collect(Collectors.toList());
     }
+
+    public List<Answer> toAnswerEntityList(List<AnswerDto> answerDtos) {
+        return answerDtos.stream().map(this::toAnswerEntity).collect(Collectors.toList());
+    }
+
+    public Answer toAnswerEntity(AnswerDto answerDto) {
+        Answer answer = new Answer();
+        answer.setAnswerId(answerDto.getAnswerId());
+        answer.setAnswer(answerDto.getAnswer());
+        answer.setExplanation(answerDto.getExplanation());
+        answer.setCorrect(answerDto.isCorrect());
+        return answer;
+    }
 }

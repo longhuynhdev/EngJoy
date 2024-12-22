@@ -38,26 +38,5 @@ public class EmailService {
         }
     }
 
-    // Send email with an attachment
-    /*
-    public String sendMailWithAttachment(EmailDetails details) {
-        try {
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
-            mimeMessageHelper.setFrom(sender);
-            mimeMessageHelper.setTo(details.getRecipient());
-            mimeMessageHelper.setSubject(details.getSubject());
-            mimeMessageHelper.setText(details.getMsgBody());
-
-            FileSystemResource file = new FileSystemResource(new File(details.getAttachment()));
-            mimeMessageHelper.addAttachment(file.getFilename(), file);
-
-            javaMailSender.send(mimeMessage);
-            return "Mail Sent Successfully...";
-        } catch (MessagingException e) {
-            return "Error while Sending Mail with Attachment: " + e.getMessage();
-        }
-    }
-     */
 }
