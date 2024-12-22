@@ -22,6 +22,11 @@ import ResultQuizPage from "./pages/quiz/ResultQuizPage";
 import CategoriesManagement from "./pages/dashboard/categories/TagsManagement";
 import AddTag from "./pages/dashboard/categories/AddTag";
 import EditTag from "./pages/dashboard/categories/EditTag";
+// Dashboard - Questions
+import AdminQuestionPage from "@/pages/dashboard/questions/AdminQuestionPage.tsx";
+import AddQuestionPage from "@/pages/dashboard/questions/AddQuestionPage.tsx";
+import EditQuestionPage from "@/pages/dashboard/questions/EditQuestionPage.tsx";
+
 // Auth
 import AuthLayout from "./layouts/AuthLayout";
 import AuthPage from "./pages/auth/AuthPage";
@@ -49,6 +54,7 @@ function App() {
           <Route path="lessons/:id" element={<LessonDetailsPage />} />
         </Route>
 
+
         {/* Quizzes */}
         <Route element={<HomeLayout />}>
           <Route path="quizzes" element={<QuizzesPage />} />
@@ -63,6 +69,9 @@ function App() {
           <Route path="lessons" element={<AdminLessonsPage />} />
           <Route path="lessons/add" element={<AddLessonPage />} />
           <Route path="lessons/edit/:id" element={<EditLessonPage />} />
+          <Route path="questions" element={<AdminQuestionPage />} />
+          <Route path="questions/add" element={<AddQuestionPage />} />
+          <Route path="questions/edit/:id" element={<EditQuestionPage />} />
           <Route path="tags" element={<CategoriesManagement />} />
           <Route path="tags/addCategory" element={<AddTag type="category" />} />
           <Route path="tags/addDifficulty" element={<AddTag type="difficulty" />} />
