@@ -10,7 +10,7 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import DashBoardPage from "./pages/dashboard/DashboardPage";
 //Dashboard - User
 import UserTableView from "./pages/dashboard/user/userTableView";
-import UserManagementForm from "./pages/dashboard/user/UserManagementForm";
+//import UserManagementForm from "./pages/dashboard/user/UserManagementForm";
 // Dashboard - Lessons
 import AdminLessonsPage from "./pages/dashboard/lessons/AdminLessonPage";
 import AddLessonPage from "./pages/dashboard/lessons/AddLessonPage";
@@ -59,7 +59,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashBoardPage />} />
           <Route path="users" element={<UserTableView />} />
-          <Route path="users/user-management/:userEmail" element={<UserManagementForm />} />
+          {/* <Route path="users/user-management/:userEmail" element={<UserManagementForm />} /> */}
           <Route path="lessons" element={<AdminLessonsPage />} />
           <Route path="lessons/add" element={<AddLessonPage />} />
           <Route path="lessons/edit/:id" element={<EditLessonPage />} />
