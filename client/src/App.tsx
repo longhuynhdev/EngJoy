@@ -8,12 +8,14 @@ import HomePage from "./pages/home/HomePage";
 //Dashboard
 import DashboardLayout from "./layouts/DashboardLayout";
 import DashBoardPage from "./pages/dashboard/DashboardPage";
+//Dashboard - User
+import UserTableView from "./pages/dashboard/user/userTableView";
+import UserManagementForm from "./pages/dashboard/user/UserManagementForm";
 // Dashboard - Lessons
 import AdminLessonsPage from "./pages/dashboard/lessons/AdminLessonPage";
 import AddLessonPage from "./pages/dashboard/lessons/AddLessonPage";
 import EditLessonPage from "./pages/dashboard/lessons/EditLessonPage";
 //Dashboard - Quizzes
-import QuizzesDetailsPage from "./pages/quiz/QuizzesDetailsPagination";
 import QuizzesPage from "./pages/quiz/QuizzesPage";
 import ResultQuizPage from "./pages/quiz/ResultQuizPage";
 // Dashboard - Tags
@@ -50,13 +52,14 @@ function App() {
         {/* Quizzes */}
         <Route element={<HomeLayout />}>
           <Route path="quizzes" element={<QuizzesPage />} />
-          <Route path="quizzes/:id" element={<QuizzesDetailsPage />} />
           <Route path="quizzes/:id/result" element={<ResultQuizPage title={""} description={""} difficulties={[]} categories={[]} score={10} totalScore={15} />} />
         </Route>
 
         {/* Dashboard routes */}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashBoardPage />} />
+          <Route path="users" element={<UserTableView />} />
+          <Route path="users/user-management/:userEmail" element={<UserManagementForm />} />
           <Route path="lessons" element={<AdminLessonsPage />} />
           <Route path="lessons/add" element={<AddLessonPage />} />
           <Route path="lessons/edit/:id" element={<EditLessonPage />} />
