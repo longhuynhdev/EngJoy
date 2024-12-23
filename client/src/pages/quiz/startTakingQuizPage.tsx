@@ -1,33 +1,18 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useQuiz } from "@/hooks/useQuiz"; // Hook để lấy dữ liệu quiz
-import { LoadingSpinner } from "@/components/common/LoadingSpinner";
-import { ErrorMessage } from "@/components/common/ErrorMessage";
-import bannerImage from "@/img/banner.png"; // Import background image
+import bannerImage from "@/img/banner.png"; 
 
-const startTakingQuizPage = () => {
-  const { id } = useParams<{ id: string }>();
+const StartTakingQuizPage = () => {
+  const location = useLocation();
   const navigate = useNavigate();
-  const { quiz, loading, error } = useQuiz(id || "");
+  const quiz = location.state?.quiz; 
 
-  // Xử lý trạng thái tải
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  // Xử lý lỗi 404 hoặc không tìm thấy quiz
-  if (error === "404" || !quiz) {
+  if (!quiz) {
     navigate("/404");
     return null;
   }
 
-  // Xử lý lỗi khác
-  if (error) {
-    return <ErrorMessage message={error} />;
-  }
-
-  // Hiển thị nội dung trang quiz
   return (
     <div
       className="flex flex-col items-center justify-center min-h-screen bg-gray-100"
@@ -37,9 +22,7 @@ const startTakingQuizPage = () => {
         backgroundPosition: "center",
       }}
     >
-      <div
-        className="w-[669px] h-[395px] bg-white shadow-md rounded-lg p-8 text-center relative flex flex-col"
-      >
+      <div className="w-[669px] h-[395px] bg-white shadow-md rounded-lg p-8 text-center relative flex flex-col">
         {/* Quiz Title */}
         <div className="w-[347px] h-[56px] mx-auto">
           <h1 className="text-[40px] font-extrabold text-[#0F172A]">{quiz.title}</h1>
@@ -55,7 +38,7 @@ const startTakingQuizPage = () => {
 
         {/* Badges for difficulties and categories */}
         <div className="w-[515px] h-[46px] mx-auto flex justify-center gap-2 flex-wrap mb-4">
-          {quiz.difficulties.map((difficulty) => (
+          {quiz.difficulties.map((difficulty: string) => (
             <Badge
               key={difficulty}
               variant="default"
@@ -64,7 +47,7 @@ const startTakingQuizPage = () => {
               {difficulty}
             </Badge>
           ))}
-          {quiz.categories.map((category) => (
+          {quiz.categories.map((category: string) => (
             <Badge
               key={category}
               variant="secondary"
@@ -107,4 +90,4 @@ const startTakingQuizPage = () => {
   );
 };
 
-export default startTakingQuizPage;
+export default StartTakingQuizPage;
