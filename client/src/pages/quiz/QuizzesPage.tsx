@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ListQuizzes from "@/components/quiz/ListQuizzes"; // Sử dụng ListQuizzes thay vì ListLessons
 import FilterSidebar from "@/components/lessons/FilterSidebar"; // FilterSidebar có thể tái sử dụng
-import { useQuizzes } from "@/hooks/useQuizzes"; // Hook riêng cho quizzes
+import useQuizzes from "@/hooks/useQuizzes"; // Hook riêng cho quizzes
 import { Banner } from "@/components/common/Banner";
 import bannerImage from "@/img/banner.png";
 

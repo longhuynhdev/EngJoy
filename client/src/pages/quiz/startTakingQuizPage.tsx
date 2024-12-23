@@ -1,21 +1,33 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
+import { useParams, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import bannerImage from "@/img/banner.png"; // Import the image
+import { Button } from "@/components/ui/button";
+import { useQuiz } from "@/hooks/useQuiz"; // Hook để lấy dữ liệu quiz
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import { ErrorMessage } from "@/components/common/ErrorMessage";
+import bannerImage from "@/img/banner.png"; // Import background image
 
-interface QuizDetails {
-  title: string;
-  description: string;
-  difficulties: string[];
-  categories: string[];
-}
+const startTakingQuizPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { quiz, loading, error } = useQuiz(id || "");
 
-const StartQuizPage: React.FC<QuizDetails> = ({
-  title,
-  description,
-  difficulties,
-  categories,
-}) => {
+  // Xử lý trạng thái tải
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  // Xử lý lỗi 404 hoặc không tìm thấy quiz
+  if (error === "404" || !quiz) {
+    navigate("/404");
+    return null;
+  }
+
+  // Xử lý lỗi khác
+  if (error) {
+    return <ErrorMessage message={error} />;
+  }
+
+  // Hiển thị nội dung trang quiz
   return (
     <div
       className="flex flex-col items-center justify-center min-h-screen bg-gray-100"
@@ -30,32 +42,32 @@ const StartQuizPage: React.FC<QuizDetails> = ({
       >
         {/* Quiz Title */}
         <div className="w-[347px] h-[56px] mx-auto">
-          <h1 className="text-[40px] font-extrabold text-[#0F172A]">{title}</h1>
+          <h1 className="text-[40px] font-extrabold text-[#0F172A]">{quiz.title}</h1>
         </div>
 
-        {/* Horizontal Line (under Title, length 347px) */}
+        {/* Horizontal Line (under Title) */}
         <hr className="w-[347px] border-gray-300 my-2 mx-auto" />
 
         {/* Description */}
         <div className="w-[637px] h-[56px] mx-auto">
-          <p className="text-[16px] font-medium text-[#0F172A]">{description}</p>
+          <p className="text-[16px] font-medium text-[#0F172A]">{quiz.description}</p>
         </div>
 
         {/* Badges for difficulties and categories */}
         <div className="w-[515px] h-[46px] mx-auto flex justify-center gap-2 flex-wrap mb-4">
-          {difficulties.map((difficulty, index) => (
+          {quiz.difficulties.map((difficulty) => (
             <Badge
-              key={index}
-              variant="default" // You can change the variant here if needed
+              key={difficulty}
+              variant="default"
               className="text-white bg-gray-900"
             >
               {difficulty}
             </Badge>
           ))}
-          {categories.map((category, index) => (
+          {quiz.categories.map((category) => (
             <Badge
-              key={index}
-              variant="secondary" // You can change the variant here if needed
+              key={category}
+              variant="secondary"
               className="text-white bg-red-500"
             >
               {category}
@@ -63,7 +75,7 @@ const StartQuizPage: React.FC<QuizDetails> = ({
           ))}
         </div>
 
-        {/* Horizontal Line (under Badges, length 515px) */}
+        {/* Horizontal Line (under Badges) */}
         <hr className="w-[515px] border-gray-300 my-2 mx-auto" />
 
         {/* Prompt - Separate Container */}
@@ -78,12 +90,14 @@ const StartQuizPage: React.FC<QuizDetails> = ({
           <Button
             variant="secondary"
             className="px-6 py-2 text-sm font-semibold text-white bg-gray-400 rounded-md hover:bg-gray-500"
+            onClick={() => navigate("/quizzes")}
           >
             Back to Quizzes
           </Button>
           <Button
             variant="default"
-            className="px-6 py-2 text-sm font-semibold text-white bg-gray-400 rounded-md hover:bg-gray-500"
+            className="px-6 py-2 text-sm font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700"
+            onClick={() => navigate(`/quizzes/${quiz.id}/start`)}
           >
             Continue
           </Button>
@@ -93,4 +107,4 @@ const StartQuizPage: React.FC<QuizDetails> = ({
   );
 };
 
-export default StartQuizPage;
+export default startTakingQuizPage;
