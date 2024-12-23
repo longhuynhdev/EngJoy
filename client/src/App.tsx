@@ -17,6 +17,7 @@ import AddLessonPage from "./pages/dashboard/lessons/AddLessonPage";
 import EditLessonPage from "./pages/dashboard/lessons/EditLessonPage";
 //Dashboard - Quizzes
 import QuizzesPage from "./pages/quiz/QuizzesPage";
+import StartTakingQuizPage from "./pages/quiz/startTakingQuizPage";
 import ResultQuizPage from "./pages/quiz/ResultQuizPage";
 // Dashboard - Tags
 import CategoriesManagement from "./pages/dashboard/categories/TagsManagement";
@@ -58,6 +59,7 @@ function App() {
         {/* Quizzes */}
         <Route element={<HomeLayout />}>
           <Route path="quizzes" element={<QuizzesPage />} />
+          <Route path="/quizzes/:id/start" element={<StartTakingQuizPage />} />
           <Route path="quizzes/:id/result" element={<ResultQuizPage title={""} description={""} difficulties={[]} categories={[]} score={10} totalScore={15} />} />
         </Route>
 
