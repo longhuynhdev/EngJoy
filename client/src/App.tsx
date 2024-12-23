@@ -16,9 +16,9 @@ import EditLessonPage from "./pages/dashboard/lessons/EditLessonPage";
 import QuizzesDetailsPage from "./pages/quiz/QuizzesDetailsPagination";
 import QuizzesPage from "./pages/quiz/QuizzesPage";
 // Dashboard - Tags
-import CategoriesManagement from "./pages/dashboard/tags/TagsManagement";
-import AddTag from "./pages/dashboard/tags/AddTag";
-import EditTag from "./pages/dashboard/tags/EditTag";
+import CategoriesManagement from "./pages/dashboard/categories/TagsManagement";
+import AddTag from "./pages/dashboard/categories/AddTag";
+import EditTag from "./pages/dashboard/categories/EditTag";
 // Auth
 import AuthLayout from "./layouts/AuthLayout";
 import AuthPage from "./pages/auth/AuthPage";

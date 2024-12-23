@@ -30,7 +30,8 @@ public class QuizService {
 
     private QuizService(QuizRepository quizRepository, UserRepository userRepository,
                         CategoryRepository categoryRepository, DifficultyRepository difficultyRepository,
-                        QuizMapper lessonMapper, QuizResultRepository quizResultRepository, QuestionRepository questionRepository, QuizMapper quizMapper, QuestionMapper questionMapper, QuizResultMapper quizResultMapper)
+                        QuizResultRepository quizResultRepository, QuestionRepository questionRepository,
+                        QuestionMapper questionMapper, QuizResultMapper quizResultMapper, QuizMapper quizMapper)
     {
         this.quizRepository = quizRepository;
         this.userRepository = userRepository;

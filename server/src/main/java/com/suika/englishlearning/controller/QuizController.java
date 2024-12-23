@@ -51,7 +51,7 @@ public class QuizController {
         }
     }
 
-    @PutMapping(path = "/createQuiz")
+    @PostMapping(path = "/createQuiz")
     public ResponseEntity<?> createQuiz(@RequestBody QuizRequestDto quizRequestDto, String userName)
     {
         try {
@@ -62,7 +62,7 @@ public class QuizController {
         }
     }
 
-    @PostMapping(path = "/updateQuiz/{id}")
+    @PutMapping(path = "/updateQuiz/{id}")
     public ResponseEntity<?> updateQuiz(@PathVariable("id") Integer id, @RequestBody QuizRequestDto quizRequestDto)
     {
         try {

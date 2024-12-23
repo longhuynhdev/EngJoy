@@ -5,10 +5,12 @@ import com.suika.englishlearning.model.QuestionResult;
 import com.suika.englishlearning.model.dto.question.QuestionResultDto;
 import com.suika.englishlearning.repository.AnswerRepository;
 import com.suika.englishlearning.repository.QuestionRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class QuestionResultMapper implements Mapper<QuestionResult, QuestionResultDto>{
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;

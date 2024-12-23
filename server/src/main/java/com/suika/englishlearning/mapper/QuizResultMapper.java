@@ -3,10 +3,12 @@ package com.suika.englishlearning.mapper;
 import com.suika.englishlearning.model.QuizResult;
 import com.suika.englishlearning.model.dto.quiz.QuizAttemptRequestDto;
 import com.suika.englishlearning.model.dto.quiz.QuizAttemptResponseDto;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class QuizResultMapper implements Mapper<QuizResult, QuizAttemptResponseDto> {
     private final QuestionResultMapper questionResultMapper;
 
