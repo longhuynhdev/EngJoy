@@ -66,7 +66,7 @@ function App() {
           <Route path="quizzes" element={<QuizzesPage />} />
           <Route path="quizzes/:id/start" element={<StartTakingQuizPage />} />
           <Route path="quizzes/:id/taking" element={<TakingQuizPage />} />
-          <Route path="quizzes/:id/result" element={<ResultQuizPage title={""} description={""} difficulties={[]} categories={[]} score={10} totalScore={15} />} />
+          <Route path="quizzes/:id/result" element={<ResultQuizPage/>} />
         </Route>
 
         {/* Dashboard routes */}
