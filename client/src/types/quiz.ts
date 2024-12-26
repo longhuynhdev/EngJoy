@@ -12,14 +12,14 @@ export interface Answer {
   }
   
   export interface Quiz {
-    id: string;                    // ID của quiz
-    title: string;                 // Tiêu đề của quiz
-    shortDescription: string;      // Mô tả ngắn về quiz
-    duration: number;              // Thời gian làm quiz (giây)
+    id: string;                    
+    title: string;                 
+    shortDescription: string;      
+    duration: number;              // Thời gian làm quiz 
     points: number;                // Số điểm tối đa cho quiz
-    date: string;                  // Ngày tạo quiz (dạng ISO 8601)
-    categories: string[];          // Mảng các thể loại của quiz
-    difficulties: string[];        // Mảng các mức độ khó của quiz
-    questions: Question[];         // Mảng các câu hỏi trong quiz
+    date: string;                  // Ngày tạo quiz 
+    categories: string[];          
+    difficulties: string[];       
+    questions: Question[];         
   }
   

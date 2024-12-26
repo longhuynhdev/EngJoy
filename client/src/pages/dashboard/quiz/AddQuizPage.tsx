@@ -1,23 +1,23 @@
 import { toast } from "sonner";
 import { QuizForm, QuizFormValues } from "@/components/quiz/QuizForm"; 
 import BackButton from "@/components/common/BackButton";
-import { useAddQuiz } from "@/hooks/useQuiz"; // Hook to handle adding quizzes
+import { useAddQuiz } from "@/hooks/useQuiz"; 
 import { useNavigate } from "react-router-dom";
 
 const AddQuizPage = () => {
   const navigate = useNavigate();
-  const { addQuiz, isLoading } = useAddQuiz(); // Replace this with your hook for adding quizzes
+  const { addQuiz, isLoading } = useAddQuiz(); 
 
   const handleSubmit = async (data: QuizFormValues) => {
     try {
       // DEBUG: Log data for debugging
       console.log("Quiz data submitted:", data);
 
-      await addQuiz(data); // Add the quiz using your custom hook
+      await addQuiz(data); 
       toast.success(`Quiz: ${data.title} has been added successfully`);
 
       setTimeout(() => {
-        navigate("/dashboard/quizzes"); // Navigate back to the quizzes page
+        navigate("/dashboard/quizzes");
       }, 1500);
     } catch (error) {
       console.error("Failed to add quiz:", error);
