@@ -70,11 +70,12 @@ const QuestionBlock = ({ currentQuestion, handleAnswer }: QuestionBlockProps) =>
 const TakingQuizPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const quiz = location.state?.quiz; 
   const [quizQuestions, setQuizQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<boolean[]>([]);
   const [quizTitle] = useState(location.state?.quiz?.title || "Default Quiz Title");
-
+  const [score, setScore] = useState(0); // Lưu điểm số
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -92,10 +93,15 @@ const TakingQuizPage = () => {
     fetchQuestions();
   }, [navigate]);
 
-  const handleAnswer = () => {
+  const handleAnswer = (index: number) => {
     const updatedAnswers = [...answeredQuestions];
     updatedAnswers[currentQuestionIndex] = true;
     setAnsweredQuestions(updatedAnswers);
+
+    // Giả sử câu trả lời đúng là câu trả lời có index 0
+    if (index === 0) {
+      setScore(score + 1); // Tăng điểm khi trả lời đúng
+    }
 
     if (currentQuestionIndex < quizQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -151,7 +157,16 @@ const TakingQuizPage = () => {
           variant="secondary"
           onClick={() => {
             if (currentQuestionIndex === quizQuestions.length - 1) {
-              navigate("/quizzes/results"); 
+              navigate(`/quizzes/${quiz.id}/result`, {
+                state: {
+                  score,
+                  totalScore: quizQuestions.length, // Tổng điểm tối đa là số câu hỏi
+                  title: quiz.title,
+                  description: quiz.description,  
+                  difficulties: quiz.difficulties, 
+                  categories: quiz.categories, 
+                }, 
+              });
             } else {
               setCurrentQuestionIndex((prev) => prev + 1);
             }
