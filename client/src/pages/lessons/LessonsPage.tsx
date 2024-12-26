@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ListLessons from "@/components/lessons/ListLessons";
-import FilterSidebar from "@/components/lessons/FilterSidebar";
+import FilterSidebar from "@/components/lessons/FilterSideBar_2";
 import { useLessons } from "@/hooks/useLesssons";
 import { Banner } from "@/components/common/Banner";
 import bannerImage from "@/img/banner.png";
