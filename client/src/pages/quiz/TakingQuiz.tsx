@@ -71,6 +71,7 @@ const TakingQuizPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const quiz = location.state?.quiz; 
+  const quizId = useParams().id;
   const [quizQuestions, setQuizQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<boolean[]>([]);
@@ -80,7 +81,7 @@ const TakingQuizPage = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/v1/questions");
+        const response = await fetch(`http://localhost:8080/api/v1/quiz/${quizId}/getQuestions`);
         const data = await response.json();
         setQuizQuestions(data);
         setAnsweredQuestions(new Array(data.length).fill(false)); 
