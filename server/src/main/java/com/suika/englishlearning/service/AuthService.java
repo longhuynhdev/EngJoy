@@ -9,6 +9,7 @@ import com.suika.englishlearning.model.UserEntity;
 import com.suika.englishlearning.model.dto.auth.AuthDto;
 import com.suika.englishlearning.model.dto.auth.LoginDto;
 import com.suika.englishlearning.model.dto.auth.RegisterDto;
+import com.suika.englishlearning.model.dto.email.EmailDetails;
 import com.suika.englishlearning.repository.RoleRepository;
 import com.suika.englishlearning.repository.UserRepository;
 import com.suika.englishlearning.security.JWTGenerator;
@@ -35,6 +36,8 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWTGenerator jwtGenerator;
+    private final EmailService emailService;
+
 
     @Value("${googleClientId}")
     String clientId;
@@ -42,12 +45,13 @@ public class AuthService {
     String clientSecret;
 
     public AuthService(AuthenticationManager authenticationManager, UserRepository userRepository,
-                       RoleRepository roleRepository, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator) {
+                       RoleRepository roleRepository, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator, EmailService emailService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtGenerator = jwtGenerator;
+        this.emailService = emailService;
     }
 
     private boolean isNotValidEmail(String email) {
@@ -74,6 +78,18 @@ public class AuthService {
         user.setRole(role);
 
         userRepository.save(user);
+        // Send email to user
+        // Create email content
+        String emailContent = "<html>" +
+                "<body>" +
+                "<h1>Welcome to JoyEng English Learning System</h1>" +
+                "<p>You have successfully registered to JoyEng English Learning System.</p>" +
+                "<a href='http://localhost:5173/' style='display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #4CAF50; text-align: center; text-decoration: none; border-radius: 5px;'>Go to Home Page</a>" +
+                "</body>" +
+                "</html>";
+
+        // Send email to user
+        emailService.sendSimpleMail(new EmailDetails(user.getEmail(), "Welcome to JoyEng English Learning System", emailContent));
         return "User registered successfully";
     }
 

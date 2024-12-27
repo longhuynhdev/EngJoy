@@ -2,17 +2,15 @@ package com.suika.englishlearning.service;
 
 import com.suika.englishlearning.model.dto.email.EmailDetails;
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 //import javax.mail.internet.MimeMessage;
 
-import java.io.File;
 
 @Service
 public class EmailService {
@@ -25,15 +23,17 @@ public class EmailService {
     // Send a simple email
     public String sendSimpleMail(EmailDetails details) {
         try {
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setFrom(sender);
-            mailMessage.setTo(details.getRecipient());
-            mailMessage.setSubject(details.getSubject());
-            mailMessage.setText(details.getMsgBody());
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-            javaMailSender.send(mailMessage);
+            helper.setFrom(sender);
+            helper.setTo(details.getRecipient());
+            helper.setSubject(details.getSubject());
+            helper.setText(details.getMsgBody(), true); // enable HTML
+
+            javaMailSender.send(mimeMessage);
             return "Mail Sent Successfully...";
-        } catch (Exception e) {
+        } catch (MessagingException e) {
             return "Error while Sending Mail: " + e.getMessage();
         }
     }
