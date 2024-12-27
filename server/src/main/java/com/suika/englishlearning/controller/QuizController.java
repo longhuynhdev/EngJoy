@@ -2,10 +2,12 @@ package com.suika.englishlearning.controller;
 
 import com.suika.englishlearning.exception.DuplicateResourceException;
 import com.suika.englishlearning.exception.ResourceNotFoundException;
+import com.suika.englishlearning.exception.UserNotAllowedException;
 import com.suika.englishlearning.mapper.QuestionMapper;
 import com.suika.englishlearning.model.dto.quiz.*;
 import com.suika.englishlearning.service.QuizService;
 import org.antlr.v4.runtime.misc.Pair;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,19 +53,19 @@ public class QuizController {
         }
     }
 
-    @PostMapping(path = "/createQuiz")
-    public ResponseEntity<?> createQuiz(@RequestBody QuizRequestDto quizRequestDto, String userName)
+    @PostMapping(path = "/createQuiz/{username}")
+    public ResponseEntity<String> createQuiz(@RequestBody AddQuizRequestDto addQuizRequestDto, @PathVariable("username") String userName)
     {
         try {
-            return new ResponseEntity<>(quizService.createQuiz(quizRequestDto, userName), HttpStatus.CREATED);
+            return new ResponseEntity<>(quizService.createQuiz(addQuizRequestDto, userName), HttpStatus.CREATED);
         }
-        catch (ResourceNotFoundException | IllegalArgumentException e) {
+        catch (ResourceNotFoundException | IllegalArgumentException | UserNotAllowedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping(path = "/updateQuiz/{id}")
-    public ResponseEntity<?> updateQuiz(@PathVariable("id") Integer id, @RequestBody QuizRequestDto quizRequestDto)
+    public ResponseEntity<?> updateQuiz(@PathVariable("id") Integer id, @RequestBody EditQuizRequestDto quizRequestDto)
     {
         try {
             return new ResponseEntity<>(quizService.updateQuiz(id, quizRequestDto), HttpStatus.OK);
@@ -86,6 +88,19 @@ public class QuizController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (DuplicateResourceException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+    }
+
+    @PutMapping(path = "/{id}/removeQuestions")
+    public ResponseEntity<?> removeQuestionsFromQuiz(@PathVariable("id") Integer id, @RequestBody List<Integer> questionIds)
+    {
+        try {
+            String message = quizService.removeQuestionsFromQuiz(id, questionIds);
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -11,6 +11,7 @@ import com.suika.englishlearning.model.dto.question.QuestionResultDto;
 import com.suika.englishlearning.model.dto.quiz.*;
 import com.suika.englishlearning.repository.*;
 import org.antlr.v4.runtime.misc.Pair;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -24,13 +25,14 @@ public class QuizService {
     private final CategoryRepository categoryRepository;
     private final DifficultyRepository difficultyRepository;
     private final QuestionRepository questionRepository;
+    private final AnswerRepository answerRepository;
     private final QuizMapper quizMapper;
     private final QuestionMapper questionMapper;
     private final QuizResultMapper quizResultMapper;
 
     private QuizService(QuizRepository quizRepository, UserRepository userRepository,
                         CategoryRepository categoryRepository, DifficultyRepository difficultyRepository,
-                        QuizResultRepository quizResultRepository, QuestionRepository questionRepository,
+                        QuizResultRepository quizResultRepository, QuestionRepository questionRepository, QuestionService questionService, AnswerRepository answerRepository,
                         QuestionMapper questionMapper, QuizResultMapper quizResultMapper, QuizMapper quizMapper)
     {
         this.quizRepository = quizRepository;
@@ -39,6 +41,7 @@ public class QuizService {
         this.difficultyRepository = difficultyRepository;
         this.quizResultRepository = quizResultRepository;
         this.questionRepository = questionRepository;
+        this.answerRepository = answerRepository;
         this.quizMapper = quizMapper;
         this.questionMapper = questionMapper;
         this.quizResultMapper = quizResultMapper;
@@ -62,21 +65,35 @@ public class QuizService {
                 .orElseThrow(() -> new ResourceNotFoundException("Quiz not found")));
     }
 
-    public QuizResponseDto createQuiz(QuizRequestDto quizRequestDto, String userName)
-    {
+    public String createQuiz(AddQuizRequestDto addQuizRequestDto, String userName) {
         UserEntity author = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        if (quizRequestDto.getDuration() <= 0 || quizRequestDto.getPoints() <= 0) {
+        if (author.getRole().getName().equals("USER"))
+            throw new RuntimeException("User cannot create quizzes");
+
+        if (addQuizRequestDto.getDuration() <= 0 || addQuizRequestDto.getPoints() <= 0) {
             throw new IllegalArgumentException("Duration and points must be greater than 0");
         }
 
-        Quiz quiz = quizMapper.toEntity(quizRequestDto, author);
+        List<Question> questions = questionMapper.toEntityList(addQuizRequestDto.getQuestions());
+        for (Question question : questions) {
+            List<Answer> answers = question.getAnswers();
+            if (answers != null) {
+                answerRepository.saveAll(answers);
+            }
+        }
+        questionRepository.saveAll(questions);
 
-        return quizMapper.toDto(quizRepository.save(quiz));
+        Quiz quiz = quizMapper.toEntity(addQuizRequestDto, author);
+        quiz.setQuestions(questions);
+
+        quizRepository.save(quiz);
+
+        return "Quiz created";
     }
 
-    public QuizResponseDto updateQuiz(Integer id, QuizRequestDto quizRequestDto)
+    public QuizResponseDto updateQuiz(Integer id, EditQuizRequestDto quizRequestDto)
     {
         Quiz quiz = quizRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
@@ -158,6 +175,33 @@ public class QuizService {
         quizRepository.save(quiz);
 
         return "Questions assigned";
+    }
+
+    public String removeQuestionsFromQuiz(Integer id, List<Integer> questionIds) {
+        if (questionIds == null || questionIds.isEmpty()) {
+            throw new IllegalArgumentException("Question list cannot be empty");
+        }
+
+        Quiz quiz = quizRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
+
+        List<Question> questions = quiz.getQuestions();
+
+        for (Integer questionId : questionIds) {
+            Question question = questionRepository.findById(questionId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
+            if (!questions.contains(question))
+            {
+                throw new IllegalArgumentException("Question not in the quiz");
+            }
+
+            questions.remove(question);
+        }
+
+        quiz.setQuestions(questions);
+        quizRepository.save(quiz);
+
+        return "Questions removed";
     }
 
     public List<QuestionDto> getQuestions(Integer id)

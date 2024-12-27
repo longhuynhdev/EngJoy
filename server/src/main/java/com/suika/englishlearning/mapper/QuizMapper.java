@@ -3,7 +3,7 @@ package com.suika.englishlearning.mapper;
 import com.suika.englishlearning.exception.ResourceNotFoundException;
 import com.suika.englishlearning.model.*;
 import com.suika.englishlearning.model.dto.quiz.QuizDetailsDto;
-import com.suika.englishlearning.model.dto.quiz.QuizRequestDto;
+import com.suika.englishlearning.model.dto.quiz.AddQuizRequestDto;
 import com.suika.englishlearning.model.dto.quiz.QuizResponseDto;
 import com.suika.englishlearning.repository.CategoryRepository;
 import com.suika.englishlearning.repository.DifficultyRepository;
@@ -60,7 +60,7 @@ public class QuizMapper implements Mapper<Quiz, QuizResponseDto> {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public Quiz toEntity(QuizRequestDto dto, UserEntity author)
+    public Quiz toEntity(AddQuizRequestDto dto, UserEntity author)
     {
         Quiz quiz = new Quiz();
         quiz.setTitle(dto.getTitle());

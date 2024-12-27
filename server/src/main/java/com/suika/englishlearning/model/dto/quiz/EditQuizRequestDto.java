@@ -1,12 +1,14 @@
 package com.suika.englishlearning.model.dto.quiz;
 
-import lombok.Data;
+import com.suika.englishlearning.model.dto.question.QuestionDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.Data;
+
 @Data
-public class QuizRequestDto {
+public class EditQuizRequestDto {
     private String title;
     private String shortDescription;
     private int duration;
