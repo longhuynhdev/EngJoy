@@ -12,11 +12,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import difficulties from "@/data/difficulties";
-import categories from "@/data/categories";
 import { MultiSelect } from "@/components/ui/multi-select";
 import Tiptap from "../Tiptap";
 import { LoadingSpinner } from "../common/LoadingSpinner";
+import { useState, useEffect } from "react"; 
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -40,12 +39,63 @@ interface LessonFormProps {
   isLoading?: boolean;
 }
 
+interface Category {
+  name: string;
+  description: string;
+}
+
+interface Difficulty {
+  name: string;
+  description: string;
+}
+
+
 export const LessonForm = ({
   initialData,
   onSubmit,
   submitLabel = "Submit",
   isLoading,
 }: LessonFormProps) => {
+  const [apiCategories, setApiCategories] = useState<{value: string, label: string}[]>([]);
+  const [apiDifficulties, setApiDifficulties] = useState<{value: string, label: string}[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+
+  // Fetch categories and difficulties when component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [categoriesRes, difficultiesRes] = await Promise.all([
+          fetch('http://localhost:8080/api/v1/category/getCategories'),
+          fetch('http://localhost:8080/api/v1/difficulty/getDifficulties')
+        ]);
+
+        const categoriesData: Category[] = await categoriesRes.json();
+        const difficultiesData: Difficulty[] = await difficultiesRes.json();
+
+        // Transform data to match the MultiSelect component format
+        setApiCategories(
+          categoriesData.map(cat => ({
+            value: cat.name,
+            label: cat.name
+          }))
+        );
+
+        setApiDifficulties(
+          difficultiesData.map(diff => ({
+            value: diff.name,
+            label: diff.name
+          }))
+        );
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoadingData(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
@@ -182,12 +232,13 @@ export const LessonForm = ({
               </FormLabel>
               <FormControl>
                 <MultiSelect
-                  options={categories}
-                  onValueChange={handleCategoriesChange}
-                  defaultValue={field.value}
-                  placeholder="Select categories"
-                  variant="secondary"
-                  maxCount={4}
+                options={apiCategories}
+                onValueChange={handleCategoriesChange}
+                defaultValue={field.value}
+                placeholder={isLoadingData ? "Loading categories..." : "Select categories"}
+                variant="secondary"
+                maxCount={4}
+                disabled={isLoadingData}
                 />
               </FormControl>
               <FormMessage />
@@ -204,12 +255,13 @@ export const LessonForm = ({
               </FormLabel>
               <FormControl>
                 <MultiSelect
-                  options={difficulties}
-                  onValueChange={handleDifficultiesChange}
-                  defaultValue={field.value}
-                  placeholder="Select difficulties"
-                  variant="secondary"
-                  maxCount={4}
+                options={apiDifficulties}
+                onValueChange={handleDifficultiesChange}
+                defaultValue={field.value}
+                placeholder={isLoadingData ? "Loading difficulties..." : "Select difficulties"}
+                variant="secondary"
+                maxCount={4}
+                disabled={isLoadingData}
                 />
               </FormControl>
               <FormMessage />

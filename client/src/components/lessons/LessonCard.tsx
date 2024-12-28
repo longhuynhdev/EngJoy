@@ -40,7 +40,7 @@ const LessonCard = ({ lesson }: LessonCardProps) => {
       <CardContent className="pt-0">
         <div className="w-full overflow-hidden rounded-lg">
           <img
-            src={`https://placehold.co/228x85/orange/white`}
+            src={`https://placehold.co/228x85/green/white?text=${lesson.title}`}
             alt={lesson.title}
             className="object-cover w-full h-auto"
           />
