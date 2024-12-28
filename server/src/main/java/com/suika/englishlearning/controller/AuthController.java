@@ -7,9 +7,12 @@ import com.suika.englishlearning.model.dto.auth.AuthResponseDto;
 import com.suika.englishlearning.model.dto.auth.LoginDto;
 import com.suika.englishlearning.model.dto.auth.RegisterDto;
 import com.suika.englishlearning.service.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,16 +61,10 @@ public class AuthController {
     // reference:
     // https://medium.com/@sallu-salman/implementing-sign-in-with-google-in-spring-boot-application-5f05a34905a8
     @GetMapping("googlegrantcode")
-    public ResponseEntity<?> grantCode(@RequestParam("code") String code, @RequestParam("scope") String scope,
-                                       @RequestParam("authuser") String authUser, @RequestParam("prompt") String prompt) {
-        AuthDto response = authService.processGrantCode(code);
-        AuthResponseDto responseDto = new AuthResponseDto(response.getName(), response.getEmail(), response.getRole());
-
-        Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("user", responseDto);
-        responseMap.put("token", response.getAccessToken());
-
-        return ResponseEntity.ok(responseMap);
+    public void grantCode(@RequestParam("code") String code, HttpServletResponse response) throws IOException, IOException {
+        AuthDto authDto = authService.processGrantCode(code);
+        String redirectUrl = "http://localhost:5173/auth/callback?token=" + authDto.getAccessToken() + "&name=" + authDto.getName() + "&email=" + authDto.getEmail() + "&role=" + authDto.getRole();
+        response.sendRedirect(redirectUrl);
     }
 
     @ExceptionHandler({ InvalidEmailException.class, IncorrectPasswordException.class })

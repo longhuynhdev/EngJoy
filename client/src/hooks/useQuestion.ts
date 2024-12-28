@@ -136,23 +136,6 @@ export const useEditQuestion = () => {
   return { editQuestion, isLoading, error };
 };
 
-// export const useDeleteQuestion = () => {
-//   const deleteQuestion = async (id: string): Promise<void> => {
-//     const response = await fetch(
-//       `http://localhost:8080/api/v1/questions/${id}`,
-//       {
-//         method: "DELETE",
-//       }
-//     );
-
-//     if (!response.ok) {
-//       throw new Error("Failed to delete question");
-//     }
-//   };
-
-//   return { deleteQuestion };
-// };
-
 export const useDeleteQuestion = () => {
   const [error, setError] = useState<string | null>(null);
 

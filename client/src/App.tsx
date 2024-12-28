@@ -36,6 +36,7 @@ import EditQuestionPage from "@/pages/dashboard/questions/EditQuestionPage.tsx";
 // Auth
 import AuthLayout from "./layouts/AuthLayout";
 import AuthPage from "./pages/auth/AuthPage";
+import AuthCallback from "./components/auth/AuthCallback";
 import UserProfilePage from "./pages/auth/UserProfilePage";
 import EditProfilePage from "./pages/auth/EditProfilePage";
 import ChangePasswordPage from "./pages/auth/ChangePasswordPage";
@@ -93,6 +94,7 @@ function App() {
         {/* Auth routes */}
         <Route element={<AuthLayout />}>
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/profile" element={<UserProfilePage />} />
           <Route path="/edit-profile" element={<EditProfilePage />} />
           <Route path="/change-password" element={<ChangePasswordPage />} />
