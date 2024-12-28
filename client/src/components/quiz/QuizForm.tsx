@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -16,8 +16,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { PlusCircle, Trash2 } from "lucide-react";
-import categories from "@/data/categories";
-import difficulties from "@/data/difficulties";
 import { MultiSelect } from "../ui/multi-select";
 
 // Schema for form validation
@@ -50,8 +48,63 @@ interface QuizFormProps {
   onSubmit: (data: QuizFormValues) => void;
 }
 
+interface Category {
+  name: string;
+  description: string;
+}
+
+interface Difficulty {
+  name: string;
+  description: string;
+}
+
 export function QuizForm({ initialData, onSubmit }: QuizFormProps) {
-  const [isEditing, setIsEditing] = useState(!!initialData);
+  const [apiCategories, setApiCategories] = useState<
+    { value: string; label: string }[]
+  >([]);
+
+  const [apiDifficulties, setApiDifficulties] = useState<
+    { value: string; label: string }[]
+  >([]);
+
+  const [isEditing] = useState(!!initialData);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+
+  // Fetch categories and difficulties when component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [categoriesRes, difficultiesRes] = await Promise.all([
+          fetch("http://localhost:8080/api/v1/category/getCategories"),
+          fetch("http://localhost:8080/api/v1/difficulty/getDifficulties"),
+        ]);
+
+        const categoriesData: Category[] = await categoriesRes.json();
+        const difficultiesData: Difficulty[] = await difficultiesRes.json();
+
+        // Transform data to match the MultiSelect component format
+        setApiCategories(
+          categoriesData.map((cat) => ({
+            value: cat.name,
+            label: cat.name,
+          }))
+        );
+
+        setApiDifficulties(
+          difficultiesData.map((diff) => ({
+            value: diff.name,
+            label: diff.name,
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoadingData(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const form = useForm<QuizFormValues>({
     resolver: zodResolver(quizSchema),
@@ -191,13 +244,18 @@ export function QuizForm({ initialData, onSubmit }: QuizFormProps) {
                 Categories
               </FormLabel>
               <FormControl>
-                <MultiSelect
-                  options={categories}
+              <MultiSelect
+                  options={apiCategories}
                   onValueChange={handleCategoriesChange}
                   defaultValue={field.value}
-                  placeholder="Select categories"
+                  placeholder={
+                    isLoadingData
+                      ? "Loading categories..."
+                      : "Select categories"
+                  }
                   variant="secondary"
                   maxCount={4}
+                  disabled={isLoadingData}
                 />
               </FormControl>
               <FormMessage />
@@ -215,13 +273,18 @@ export function QuizForm({ initialData, onSubmit }: QuizFormProps) {
                 Difficulties
               </FormLabel>
               <FormControl>
-                <MultiSelect
-                  options={difficulties}
+              <MultiSelect
+                  options={apiDifficulties}
                   onValueChange={handleDifficultiesChange}
                   defaultValue={field.value}
-                  placeholder="Select difficulties"
+                  placeholder={
+                    isLoadingData
+                      ? "Loading difficulties..."
+                      : "Select difficulties"
+                  }
                   variant="secondary"
                   maxCount={4}
+                  disabled={isLoadingData}
                 />
               </FormControl>
               <FormMessage />
