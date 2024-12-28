@@ -97,6 +97,14 @@ const LessonsTable = ({
                     Edit
                   </Button>
                 </Link>
+                <Link
+                    to={`${baseUrl}/assignQuestions/${lesson.id}`}
+                    className="inline-block mr-2"
+                >
+                  <Button className="px-4 py-2 text-xs font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
+                    Assign Questions
+                  </Button>
+                </Link>
                 <DeleteConfirmationPopover
                   title="Delete Lesson"
                   message={`Are you sure you want to delete "${lesson.title}"?`}

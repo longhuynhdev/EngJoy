@@ -15,6 +15,7 @@ import UserTableView from "./pages/dashboard/user/userTableView";
 import AdminLessonsPage from "./pages/dashboard/lessons/AdminLessonPage";
 import AddLessonPage from "./pages/dashboard/lessons/AddLessonPage";
 import EditLessonPage from "./pages/dashboard/lessons/EditLessonPage";
+import AssignQuestionPage from "./pages/dashboard/questions/AssignQuestionsPage.tsx";
 //Dashboard - Quizzes
 import QuizzesPage from "./pages/quiz/QuizzesPage";
 import StartTakingQuizPage from "./pages/quiz/startTakingQuizPage";
@@ -32,7 +33,6 @@ import EditTag from "./pages/dashboard/categories/EditTag";
 import AdminQuestionPage from "@/pages/dashboard/questions/AdminQuestionPage.tsx";
 import AddQuestionPage from "@/pages/dashboard/questions/AddQuestionPage.tsx";
 import EditQuestionPage from "@/pages/dashboard/questions/EditQuestionPage.tsx";
-
 // Auth
 import AuthLayout from "./layouts/AuthLayout";
 import AuthPage from "./pages/auth/AuthPage";
@@ -59,15 +59,15 @@ function App() {
         <Route element={<HomeLayout />}>
           <Route path="lessons" element={<LessonsPage />} />
           <Route path="lessons/:id" element={<LessonDetailsPage />} />
-        </Route>
 
+        </Route>
 
         {/* Quizzes */}
         <Route element={<HomeLayout />}>
           <Route path="quizzes" element={<QuizzesPage />} />
           <Route path="quizzes/:id/start" element={<StartTakingQuizPage />} />
           <Route path="quizzes/:id/taking" element={<TakingQuizPage />} />
-          <Route path="quizzes/:id/result" element={<ResultQuizPage/>} />
+          <Route path="quizzes/:id/result" element={<ResultQuizPage />} />
         </Route>
 
         {/* Dashboard routes */}
@@ -78,16 +78,27 @@ function App() {
           <Route path="lessons" element={<AdminLessonsPage />} />
           <Route path="lessons/add" element={<AddLessonPage />} />
           <Route path="lessons/edit/:id" element={<EditLessonPage />} />
+          <Route path="lessons/assignQuestions/:id" element={<AssignQuestionPage />} />
           <Route path="questions" element={<AdminQuestionPage />} />
           <Route path="questions/add" element={<AddQuestionPage />} />
           <Route path="questions/edit/:id" element={<EditQuestionPage />} />
           <Route path="tags" element={<CategoriesManagement />} />
           <Route path="tags/addCategory" element={<AddTag type="category" />} />
-          <Route path="tags/addDifficulty" element={<AddTag type="difficulty" />} />
-          <Route path="tags/editCategory/:name" element={<EditTag type="category" />} />
-          <Route path="tags/editDifficulty/:name" element={<EditTag type="difficulty" />} />
+          <Route
+            path="tags/addDifficulty"
+            element={<AddTag type="difficulty" />}
+          />
+          <Route
+            path="tags/editCategory/:name"
+            element={<EditTag type="category" />}
+          />
+          <Route
+            path="tags/editDifficulty/:name"
+            element={<EditTag type="difficulty" />}
+          />
           <Route path="quizzes" element={<AdminQuizPage />} />
           <Route path="quizzes/add" element={<AddQuizPage />} />
+
           {/*<Route path="questions/edit/:id" element={<EditQuizPage />} />*/}
         </Route>
 
