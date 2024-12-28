@@ -16,6 +16,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { PlusCircle, Trash2 } from "lucide-react";
+import categories from "@/data/categories";
+import difficulties from "@/data/difficulties";
+import { MultiSelect } from "../ui/multi-select";
 
 // Schema for form validation
 const questionSchema = z.object({
@@ -84,6 +87,20 @@ export function QuizForm({ initialData, onSubmit }: QuizFormProps) {
     if (!isEditing) {
       form.reset();
     }
+  };
+
+  const handleCategoriesChange = (values: string[]) => {
+    form.setValue(
+      "categories",
+      values.map((v) => v)
+    );
+  };
+
+  const handleDifficultiesChange = (values: string[]) => {
+    form.setValue(
+      "difficulties",
+      values.map((v) => v)
+    );
   };
 
   return (
@@ -170,9 +187,18 @@ export function QuizForm({ initialData, onSubmit }: QuizFormProps) {
           name="categories"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Categories</FormLabel>
+              <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-white">
+                Categories
+              </FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Categories (comma separated)" />
+                <MultiSelect
+                  options={categories}
+                  onValueChange={handleCategoriesChange}
+                  defaultValue={field.value}
+                  placeholder="Select categories"
+                  variant="secondary"
+                  maxCount={4}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -185,9 +211,18 @@ export function QuizForm({ initialData, onSubmit }: QuizFormProps) {
           name="difficulties"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Difficulties</FormLabel>
+              <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-white">
+                Difficulties
+              </FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Difficulties (comma separated)" />
+                <MultiSelect
+                  options={difficulties}
+                  onValueChange={handleDifficultiesChange}
+                  defaultValue={field.value}
+                  placeholder="Select difficulties"
+                  variant="secondary"
+                  maxCount={4}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
