@@ -18,4 +18,5 @@ public class LessonResponseDto {
     private LocalDateTime date;
     private List<String> categories;
     private List<String> difficulties;
+    private String mediaUrl;
 }

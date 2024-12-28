@@ -36,6 +36,7 @@ const EditLessonPage = () => {
     difficulties: lesson.difficulties,
     duration: lesson.duration.toString(),
     points: lesson.points.toString(),
+    mediaUrl: lesson.mediaUrl,
   };
 
   const handleSubmit = async (data: AddEditLessonData) => {

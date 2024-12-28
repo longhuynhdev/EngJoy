@@ -11,6 +11,7 @@ export interface Lesson {
   categories: string[];
   difficulties: string[];
   questions: Question[];
+  mediaUrl: string;
 }
 export interface Question {
   id: number;
@@ -24,4 +25,3 @@ export interface Answer {
   explanation: string;
   correct: boolean;
 }
-

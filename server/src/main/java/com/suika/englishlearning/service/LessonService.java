@@ -101,6 +101,9 @@ public class LessonService {
         if (requestDto.getDate() != null) {
             lesson.setDate(requestDto.getDate());
         }
+        if(requestDto.getMediaUrl() != null && !requestDto.getMediaUrl().isEmpty()) {
+            lesson.setMediaUrl(requestDto.getMediaUrl());
+        }
 
         if (requestDto.getCategories() != null && !requestDto.getCategories().isEmpty()) {
             List<Category> categories = requestDto.getCategories().stream()

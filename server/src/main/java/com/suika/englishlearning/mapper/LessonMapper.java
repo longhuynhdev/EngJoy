@@ -42,6 +42,7 @@ public class LessonMapper implements Mapper<Lesson, LessonResponseDto> {
                 dto.setDifficulties(entity.getDifficulties().stream()
                         .map(Difficulty::getName)
                         .collect(Collectors.toList()));
+                dto.setMediaUrl(entity.getMediaUrl());
                 return dto;
         }
 
@@ -84,6 +85,8 @@ public class LessonMapper implements Mapper<Lesson, LessonResponseDto> {
                         .collect(Collectors.toList());
                 lesson.setDifficulties(difficulties);
 
+                lesson.setMediaUrl(dto.getMediaUrl());
+
                 return lesson;
         }
 
@@ -116,6 +119,7 @@ public class LessonMapper implements Mapper<Lesson, LessonResponseDto> {
                         .collect(Collectors.toList()));
                 dto.setBody(entity.getBody());
                 dto.setQuestions(toQuestionDtoList(entity.getQuestions()));
+                dto.setMediaUrl(entity.getMediaUrl());
                 return dto;
         }
 }

@@ -5,6 +5,8 @@ import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { ErrorMessage } from "@/components/common/ErrorMessage";
 import { useNavigate } from "react-router-dom";
 import { QuestionSection } from "@/components/lessons/QuestionSection";
+import { YoutubeEmbed } from "@/components/YoutubeEmbed";
+
 const LessonDetailsPage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -43,6 +45,13 @@ const LessonDetailsPage = () => {
             ))}
           </div>
         </header>
+
+        {/* Video Section */}
+        {lesson.mediaUrl && (
+          <div className="mb-8">
+            <YoutubeEmbed url={lesson.mediaUrl} />
+          </div>
+        )}
 
         {/* Main content*/}
         <div

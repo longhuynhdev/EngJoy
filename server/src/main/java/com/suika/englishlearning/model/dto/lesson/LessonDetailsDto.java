@@ -19,4 +19,5 @@ public class LessonDetailsDto {
     private List<String> categories;
     private List<String> difficulties;
     private List<QuestionDto> questions;
+    private String mediaUrl;
 }

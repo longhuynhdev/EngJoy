@@ -7,4 +7,5 @@ export interface AddEditLessonData {
   date: string;
   categories: string[];
   difficulties: string[];
+  mediaUrl?: string;
 }

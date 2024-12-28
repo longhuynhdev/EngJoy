@@ -15,7 +15,8 @@ import { Button } from "@/components/ui/button";
 import { MultiSelect } from "@/components/ui/multi-select";
 import Tiptap from "../Tiptap";
 import { LoadingSpinner } from "../common/LoadingSpinner";
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
+import { AddEditLessonData } from "@/types/AddEditLessonData";
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -30,11 +31,12 @@ const formSchema = z.object({
   date: z.string(),
   categories: z.array(z.string()),
   difficulties: z.array(z.string()),
+  mediaUrl: z.string().optional(),
 });
 
 interface LessonFormProps {
-  initialData?: z.infer<typeof formSchema>;
-  onSubmit: (data: z.infer<typeof formSchema>) => void;
+  initialData?: AddEditLessonData;
+  onSubmit: (data: AddEditLessonData) => void;
   submitLabel?: string;
   isLoading?: boolean;
 }
@@ -49,15 +51,18 @@ interface Difficulty {
   description: string;
 }
 
-
 export const LessonForm = ({
   initialData,
   onSubmit,
   submitLabel = "Submit",
   isLoading,
 }: LessonFormProps) => {
-  const [apiCategories, setApiCategories] = useState<{value: string, label: string}[]>([]);
-  const [apiDifficulties, setApiDifficulties] = useState<{value: string, label: string}[]>([]);
+  const [apiCategories, setApiCategories] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [apiDifficulties, setApiDifficulties] = useState<
+    { value: string; label: string }[]
+  >([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
 
   // Fetch categories and difficulties when component mounts
@@ -65,8 +70,8 @@ export const LessonForm = ({
     const fetchData = async () => {
       try {
         const [categoriesRes, difficultiesRes] = await Promise.all([
-          fetch('http://localhost:8080/api/v1/category/getCategories'),
-          fetch('http://localhost:8080/api/v1/difficulty/getDifficulties')
+          fetch("http://localhost:8080/api/v1/category/getCategories"),
+          fetch("http://localhost:8080/api/v1/difficulty/getDifficulties"),
         ]);
 
         const categoriesData: Category[] = await categoriesRes.json();
@@ -74,20 +79,20 @@ export const LessonForm = ({
 
         // Transform data to match the MultiSelect component format
         setApiCategories(
-          categoriesData.map(cat => ({
+          categoriesData.map((cat) => ({
             value: cat.name,
-            label: cat.name
+            label: cat.name,
           }))
         );
 
         setApiDifficulties(
-          difficultiesData.map(diff => ({
+          difficultiesData.map((diff) => ({
             value: diff.name,
-            label: diff.name
+            label: diff.name,
           }))
         );
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       } finally {
         setIsLoadingData(false);
       }
@@ -232,13 +237,17 @@ export const LessonForm = ({
               </FormLabel>
               <FormControl>
                 <MultiSelect
-                options={apiCategories}
-                onValueChange={handleCategoriesChange}
-                defaultValue={field.value}
-                placeholder={isLoadingData ? "Loading categories..." : "Select categories"}
-                variant="secondary"
-                maxCount={4}
-                disabled={isLoadingData}
+                  options={apiCategories}
+                  onValueChange={handleCategoriesChange}
+                  defaultValue={field.value}
+                  placeholder={
+                    isLoadingData
+                      ? "Loading categories..."
+                      : "Select categories"
+                  }
+                  variant="secondary"
+                  maxCount={4}
+                  disabled={isLoadingData}
                 />
               </FormControl>
               <FormMessage />
@@ -255,13 +264,36 @@ export const LessonForm = ({
               </FormLabel>
               <FormControl>
                 <MultiSelect
-                options={apiDifficulties}
-                onValueChange={handleDifficultiesChange}
-                defaultValue={field.value}
-                placeholder={isLoadingData ? "Loading difficulties..." : "Select difficulties"}
-                variant="secondary"
-                maxCount={4}
-                disabled={isLoadingData}
+                  options={apiDifficulties}
+                  onValueChange={handleDifficultiesChange}
+                  defaultValue={field.value}
+                  placeholder={
+                    isLoadingData
+                      ? "Loading difficulties..."
+                      : "Select difficulties"
+                  }
+                  variant="secondary"
+                  maxCount={4}
+                  disabled={isLoadingData}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="mediaUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-white">
+                YouTube URL
+              </FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Enter YouTube video URL (optional)"
+                  {...field}
+                  value={field.value || ""}
                 />
               </FormControl>
               <FormMessage />

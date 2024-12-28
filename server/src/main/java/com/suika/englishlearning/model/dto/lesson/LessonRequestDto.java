@@ -5,6 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Data
 public class LessonRequestDto {
     private String title;
@@ -15,4 +16,5 @@ public class LessonRequestDto {
     private LocalDateTime date;
     private List<String> categories;
     private List<String> difficulties;
+    private String mediaUrl;
 }
