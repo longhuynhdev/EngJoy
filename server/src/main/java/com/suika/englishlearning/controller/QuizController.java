@@ -10,6 +10,7 @@ import org.antlr.v4.runtime.misc.Pair;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class QuizController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','CONTENT_EDITOR')")
     @PostMapping(path = "/createQuiz/{username}")
     public ResponseEntity<String> createQuiz(@RequestBody AddQuizRequestDto addQuizRequestDto, @PathVariable("username") String userName)
     {
@@ -64,6 +66,7 @@ public class QuizController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','CONTENT_EDITOR')")
     @PutMapping(path = "/updateQuiz/{id}")
     public ResponseEntity<?> updateQuiz(@PathVariable("id") Integer id, @RequestBody EditQuizRequestDto quizRequestDto)
     {
@@ -78,6 +81,7 @@ public class QuizController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','CONTENT_EDITOR')")
     @PutMapping(path = "/{id}/assignQuestions")
     public ResponseEntity<?> assignQuestionsToQuiz(@PathVariable("id") Integer id, @RequestBody List<Integer> questionIds)
     {
@@ -91,6 +95,7 @@ public class QuizController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','CONTENT_EDITOR')")
     @PutMapping(path = "/{id}/removeQuestions")
     public ResponseEntity<?> removeQuestionsFromQuiz(@PathVariable("id") Integer id, @RequestBody List<Integer> questionIds)
     {
@@ -114,6 +119,7 @@ public class QuizController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','CONTENT_EDITOR')")
     @DeleteMapping(path = "/deleteQuiz/{id}")
     public ResponseEntity<String> deleteQuiz(@PathVariable("id") Integer id)
     {

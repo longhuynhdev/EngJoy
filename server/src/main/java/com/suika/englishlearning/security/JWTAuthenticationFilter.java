@@ -19,17 +19,23 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JWTGenerator tokenGenerator;
     @Autowired
-    private  CustomUserDetailsService customUserDetailsService;
+    private CustomUserDetailsService customUserDetailsService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
         String token = getJWTFromRequest(request);
-        if(StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
+        if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
             String email = tokenGenerator.getUsernameFromToken(token);
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
-                    null, userDetails.getAuthorities());
+
+            // Create authentication token with authorities
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities());
+
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }

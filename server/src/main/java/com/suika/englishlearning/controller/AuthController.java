@@ -7,9 +7,7 @@ import com.suika.englishlearning.model.dto.auth.AuthResponseDto;
 import com.suika.englishlearning.model.dto.auth.LoginDto;
 import com.suika.englishlearning.model.dto.auth.RegisterDto;
 import com.suika.englishlearning.service.AuthService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
@@ -38,21 +36,13 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         try {
             AuthDto response = authService.login(loginDto);
-            AuthResponseDto responseDto = new AuthResponseDto(response.getName(), response.getEmail(),
-                    response.getRole());
-            ResponseCookie cookie = ResponseCookie.from("token", response.getAccessToken())
-                    .httpOnly(true)
-                    .secure(true)
-                    .path("/")
-                    .maxAge(24 * 60 * 60)
-                    .build();
+            AuthResponseDto responseDto = new AuthResponseDto(response.getName(), response.getEmail(), response.getRole());
 
-            Map<String, AuthResponseDto> responseMap = new HashMap<>();
+            Map<String, Object> responseMap = new HashMap<>();
             responseMap.put("user", responseDto);
+            responseMap.put("token", response.getAccessToken());
 
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                    .body(responseMap);
+            return ResponseEntity.ok(responseMap);
         } catch (InvalidEmailException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (IncorrectPasswordException e) {
@@ -62,34 +52,22 @@ public class AuthController {
 
     @PostMapping("logout")
     public ResponseEntity<String> logout() {
-        ResponseCookie cookie = ResponseCookie.from("token", "")
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge(0) // immediate expiration
-                .build();
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body("Logged out successfully");
+        return ResponseEntity.ok("Logged out successfully");
     }
 
     // reference:
     // https://medium.com/@sallu-salman/implementing-sign-in-with-google-in-spring-boot-application-5f05a34905a8
     @GetMapping("googlegrantcode")
     public ResponseEntity<?> grantCode(@RequestParam("code") String code, @RequestParam("scope") String scope,
-            @RequestParam("authuser") String authUser, @RequestParam("prompt") String prompt) {
+                                       @RequestParam("authuser") String authUser, @RequestParam("prompt") String prompt) {
         AuthDto response = authService.processGrantCode(code);
         AuthResponseDto responseDto = new AuthResponseDto(response.getName(), response.getEmail(), response.getRole());
-        ResponseCookie cookie = ResponseCookie.from("token", response.getAccessToken())
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge(24 * 60 * 60)
-                .build();
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(responseDto);
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("user", responseDto);
+        responseMap.put("token", response.getAccessToken());
+
+        return ResponseEntity.ok(responseMap);
     }
 
     @ExceptionHandler({ InvalidEmailException.class, IncorrectPasswordException.class })

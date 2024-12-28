@@ -6,19 +6,45 @@ import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import userAvatar from "../../img/user.svg";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useEffect } from "react";
 interface UserProfileFormProps {
   editable?: boolean;
+  userData?: {
+    name: string;
+    email: string;
+    role: string;
+    avatarUrl?: string;
+  };
+  loading?: boolean;
 }
 
-const UserProfileForm = ({ editable = false }: UserProfileFormProps) => {
+const UserProfileForm = ({
+  editable = false,
+  userData,
+  loading = false,
+}: UserProfileFormProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    name: "Nguyễn Văn A",
-    userName: "User Demo",
-    email: "user@joyeng.com",
-    role: "USER",
+    name: userData?.name || "",
+    userName: userData?.userName || "",
+    email: userData?.email || "",
+    role: userData?.role || "",
   });
+
+  useEffect(() => {
+    if (userData) {
+      setFormData({
+        name: userData.name,
+        userName: userData.userName,
+        email: userData.email,
+        role: userData.role,
+      });
+      if (userData.avatarUrl) {
+        setSelectedImage(userData.avatarUrl);
+      }
+    }
+  }, [userData]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -104,19 +130,12 @@ const UserProfileForm = ({ editable = false }: UserProfileFormProps) => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
-          <div className="grid w-96 items-center gap-4">
+          <div className="grid items-center gap-4 w-96">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">Name</Label>
               <Input
                 id="name"
                 value={formData.name}
-                onChange={handleInputChange}
-                disabled={!editable}
-              />
-              <Label htmlFor="userName">User Name</Label>
-              <Input
-                id="userName"
-                value={formData.userName}
                 onChange={handleInputChange}
                 disabled={!editable}
               />
@@ -139,14 +158,14 @@ const UserProfileForm = ({ editable = false }: UserProfileFormProps) => {
               <button
                 type="button"
                 onClick={() => (window.location.href = "/edit-profile")}
-                className="mt-4 w-full rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                className="w-full px-4 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
               >
                 Edit Profile
               </button>
             ) : (
               <button
                 type="submit"
-                className="mt-4 w-full rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                className="w-full px-4 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
               >
                 Save Changes
               </button>

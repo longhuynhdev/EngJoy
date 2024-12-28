@@ -5,6 +5,7 @@ import com.suika.englishlearning.model.dto.question.QuestionDto;
 import com.suika.englishlearning.service.QuestionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,11 +33,13 @@ public class QuestionController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','CONTENT_EDITOR')")
     @PostMapping
     public ResponseEntity<List<QuestionDto>> createQuestions(@RequestBody List<QuestionDto> questionDtos) {
         return new ResponseEntity<>(questionService.createQuestions(questionDtos), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','CONTENT_EDITOR')")
     @PutMapping("/{id}")
     public ResponseEntity<QuestionDto> editQuestion(@PathVariable Integer id, @RequestBody QuestionDto questionDto) {
         try {
@@ -47,6 +50,7 @@ public class QuestionController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteQuestion(@PathVariable Integer id) {
         try {

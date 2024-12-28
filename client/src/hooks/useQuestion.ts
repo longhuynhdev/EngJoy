@@ -44,6 +44,12 @@ export const useAddQuestion = () => {
     setError(null);
 
     try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("Authentication required");
+      }
+
       const transformedData = {
         ...data,
         answers: data.answers.map((answer, index) => ({
@@ -56,6 +62,7 @@ export const useAddQuestion = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify([transformedData]), // Wrap in array
       });
@@ -86,19 +93,34 @@ export const useEditQuestion = () => {
     setError(null);
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Authentication required");
+      }
+
       const response = await fetch(
         `http://localhost:8080/api/v1/questions/${id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(data),
         }
       );
 
+      if (response.status === 401) {
+        throw new Error("Please login to continue");
+      }
+      if (response.status === 403) {
+        throw new Error("You don't have permission to edit lessons");
+      }
+      if (response.status === 404) {
+        throw new Error("Lesson not found");
+      }
       if (!response.ok) {
-        throw new Error("Failed to edit question");
+        throw new Error("Failed to edit lesson");
       }
 
       const result = await response.json();
@@ -114,19 +136,60 @@ export const useEditQuestion = () => {
   return { editQuestion, isLoading, error };
 };
 
-export const useDeleteQuestion = () => {
-  const deleteQuestion = async (id: string): Promise<void> => {
-    const response = await fetch(
-      `http://localhost:8080/api/v1/questions/${id}`,
-      {
-        method: "DELETE",
-      }
-    );
+// export const useDeleteQuestion = () => {
+//   const deleteQuestion = async (id: string): Promise<void> => {
+//     const response = await fetch(
+//       `http://localhost:8080/api/v1/questions/${id}`,
+//       {
+//         method: "DELETE",
+//       }
+//     );
 
-    if (!response.ok) {
-      throw new Error("Failed to delete question");
+//     if (!response.ok) {
+//       throw new Error("Failed to delete question");
+//     }
+//   };
+
+//   return { deleteQuestion };
+// };
+
+export const useDeleteQuestion = () => {
+  const [error, setError] = useState<string | null>(null);
+
+  const deleteQuestion = async (id: string): Promise<void> => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Authentication required");
+      }
+
+      const response = await fetch(
+        `http://localhost:8080/api/v1/questions/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 401) {
+        throw new Error("Please login to continue");
+      }
+      if (response.status === 403) {
+        throw new Error("You don't have permission to delete questions");
+      }
+      if (response.status === 404) {
+        throw new Error("Question not found");
+      }
+      if (!response.ok) {
+        throw new Error("Failed to delete lesson");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+      throw err;
     }
   };
 
-  return { deleteQuestion };
+  return { deleteQuestion, error };
 };

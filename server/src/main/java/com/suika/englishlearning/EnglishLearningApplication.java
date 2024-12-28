@@ -32,9 +32,9 @@ public class EnglishLearningApplication implements CommandLineRunner {
     public void run(String... args) {
         // Create a list of default entities
         List<Role> roles = List.of(
-                new Role("USER"),
-                new Role("CONTENT_EDITOR"),
-                new Role("ADMIN")
+                new Role("ROLE_USER"),
+                new Role("ROLE_CONTENT_EDITOR"),
+                new Role("ROLE_ADMIN")
         );
         List<Category> categories = List.of(
                 new Category(1,"Vocabulary", "Learn about vocabularies"),

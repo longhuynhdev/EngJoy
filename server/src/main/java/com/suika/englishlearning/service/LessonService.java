@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -62,8 +64,11 @@ public class LessonService {
         lessonRepository.save(lesson);
     }
 
-    public LessonResponseDto createLesson(LessonRequestDto requestDto, String userName) {
-        UserEntity author = userRepository.findByEmail(userName)
+    public LessonResponseDto createLesson(LessonRequestDto requestDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserEmail = authentication.getName();
+
+        UserEntity author = userRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (requestDto.getDuration() < 0 || requestDto.getPoints() < 0) {

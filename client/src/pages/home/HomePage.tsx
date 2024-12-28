@@ -2,17 +2,21 @@ import bannerImage from "@/img/banner.png";
 import { Banner } from "@/components/common/Banner";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
   return (
     <div>
       {/* Hero Section */}
+
       <Banner
         title={`Go to new places, \nmeet new people with English`}
         description={
-          <span className="flex items-center">
-            Learn now <ArrowRightIcon className="w-5 h-5 ml-2" />
-          </span>
+          <Link to="/lessons">
+            <span className="flex items-center">
+              Learn now <ArrowRightIcon className="w-5 h-5 ml-2" />
+            </span>
+          </Link>
         }
         height="25rem"
         backgroundUrl={bannerImage}
@@ -20,10 +24,10 @@ const HomePage = () => {
 
       {/* Journey Steps Section */}
       <div className="journey-steps p-8 bg-[#1E293B] text-white flex">
-        <div className="text-left w-2/3">
+        <div className="w-2/3 text-left">
           <ol className="space-y-6">
             <li className="flex items-center space-x-4">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-black font-semibold">
+              <span className="flex items-center justify-center w-8 h-8 font-semibold text-black bg-white rounded-full">
                 1
               </span>
               <p className="flex items-center">
@@ -31,7 +35,7 @@ const HomePage = () => {
               </p>
             </li>
             <li className="flex items-center space-x-4">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-black font-semibold">
+              <span className="flex items-center justify-center w-8 h-8 font-semibold text-black bg-white rounded-full">
                 2
               </span>
               <p className="flex items-center">
@@ -40,7 +44,7 @@ const HomePage = () => {
               </p>
             </li>
             <li className="flex items-center space-x-4">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-black font-semibold">
+              <span className="flex items-center justify-center w-8 h-8 font-semibold text-black bg-white rounded-full">
                 3
               </span>
               <p className="flex items-center">
@@ -49,7 +53,7 @@ const HomePage = () => {
               </p>
             </li>
             <li className="flex items-center space-x-4">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-black font-semibold">
+              <span className="flex items-center justify-center w-8 h-8 font-semibold text-black bg-white rounded-full">
                 4
               </span>
               <p className="flex items-center">
@@ -57,7 +61,7 @@ const HomePage = () => {
               </p>
             </li>
             <li className="flex items-center space-x-4">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-black font-semibold">
+              <span className="flex items-center justify-center w-8 h-8 font-semibold text-black bg-white rounded-full">
                 5
               </span>
               <p className="flex items-center">
@@ -67,7 +71,7 @@ const HomePage = () => {
             </li>
           </ol>
         </div>
-        <div className="w-1/3 flex items-center justify-end">
+        <div className="flex items-center justify-end w-1/3">
           <h2 className="text-5xl font-bold text-right">
             How to start your journey?
           </h2>
@@ -75,16 +79,15 @@ const HomePage = () => {
       </div>
 
       {/* Still New to JoyEng Section */}
-      <div className="bg-white py-8 flex flex-col items-center border border-gray-300 rounded-lg shadow-md w-2/3 mx-auto">
-        <p className="text-gray-700 mb-4 text-4xl font-semibold">Still new to JoyEng?</p>
-          <p className="text-gray-500 mb-4 text-xl">
-            Take our level test first to know which level to start at?
-          </p>
-          <Button variant="default" >
-            To the level test
-          </Button>
+      <div className="flex flex-col items-center w-2/3 py-8 mx-auto bg-white border border-gray-300 rounded-lg shadow-md">
+        <p className="mb-4 text-4xl font-semibold text-gray-700">
+          Still new to JoyEng?
+        </p>
+        <p className="mb-4 text-xl text-gray-500">
+          Take our level test first to know which level to start at?
+        </p>
+        <Button variant="default">To the level test</Button>
       </div>
-
     </div>
   );
 };

@@ -1,10 +1,9 @@
 package com.suika.englishlearning.service;
 
 import com.suika.englishlearning.exception.IncorrectPasswordException;
-import com.suika.englishlearning.exception.NameException;
 import com.suika.englishlearning.mapper.UserMapper;
 import com.suika.englishlearning.model.UserEntity;
-import com.suika.englishlearning.model.dto.user.ChangeNameDto;
+import com.suika.englishlearning.model.dto.user.UpdateUserDto;
 import com.suika.englishlearning.model.dto.user.ChangePasswordDto;
 import com.suika.englishlearning.model.dto.user.UserDto;
 import com.suika.englishlearning.repository.UserRepository;
@@ -39,22 +38,23 @@ public class UserEntityService {
     }
 
     @Transactional
-    public String updateUserName(ChangeNameDto changeNameDto) {
-        String email = changeNameDto.getEmail();
-        UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
+    public String updateUser(String currentEmail, UpdateUserDto updateUserDto) {
+        UserEntity user = userRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + currentEmail));
 
-        String name = changeNameDto.getName();
-        if (name != null &&
-                !name.isEmpty() &&
-                !Objects.equals(user.getName(), name)) {
+        String newEmail = updateUserDto.getEmail();
+        String name = updateUserDto.getName();
+
+        if (newEmail != null && !newEmail.isEmpty() && !Objects.equals(user.getEmail(), newEmail)) {
+            user.setEmail(newEmail);
+        }
+
+        if (name != null && !name.isEmpty() && !Objects.equals(user.getName(), name)) {
             user.setName(name);
+        }
 
-            return "Updated user name successfully";
-        }
-        else {
-            throw new NameException("Invalid name or existed name");
-        }
+        userRepository.save(user);
+        return "Updated user successfully";
     }
 
     @Transactional

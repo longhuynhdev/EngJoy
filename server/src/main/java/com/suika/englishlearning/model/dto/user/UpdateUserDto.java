@@ -7,7 +7,7 @@ import lombok.Getter;
 @Data
 @AllArgsConstructor
 @Getter
-public class ChangeNameDto {
+public class UpdateUserDto {
     private String name;
     private String email;
 }

@@ -43,24 +43,27 @@ export const useAddLesson = () => {
     setError(null);
 
     try {
-      const userInfo = localStorage.getItem("userInfo");
-      if (!userInfo) {
-        throw new Error("User information not found");
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("Authentication required");
       }
 
-      const { email } = JSON.parse(userInfo);
+      const response = await fetch(`http://localhost:8080/api/v1/lessons`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
 
-      const response = await fetch(
-        `http://localhost:8080/api/v1/lessons?userName=${email}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
+      if (response.status === 401) {
+        throw new Error("Please login to continue");
+      }
+      if (response.status === 403) {
+        throw new Error("You don't have permission to create lessons");
+      }
       if (!response.ok) {
         throw new Error("Failed to add lesson");
       }
@@ -87,20 +90,36 @@ export const useEditLesson = () => {
     setError(null);
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Authentication required");
+      }
+
       const response = await fetch(
         `http://localhost:8080/api/v1/lessons/${id}`,
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(data),
         }
       );
 
+      if (response.status === 401) {
+        throw new Error("Please login to continue");
+      }
+      if (response.status === 403) {
+        throw new Error("You don't have permission to edit lessons");
+      }
+      if (response.status === 404) {
+        throw new Error("Lesson not found");
+      }
       if (!response.ok) {
         throw new Error("Failed to edit lesson");
       }
+
 
       const result = await response.json();
       return result;
@@ -116,15 +135,42 @@ export const useEditLesson = () => {
 };
 
 export const useDeleteLesson = () => {
-  const deleteLesson = async (id: string): Promise<void> => {
-    const response = await fetch(`http://localhost:8080/api/v1/lessons/${id}`, {
-      method: "DELETE",
-    });
+  const [error, setError] = useState<string | null>(null);
 
-    if (!response.ok) {
-      throw new Error("Failed to delete lesson");
+  const deleteLesson = async (id: string): Promise<void> => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Authentication required");
+      }
+
+      const response = await fetch(
+        `http://localhost:8080/api/v1/lessons/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 401) {
+        throw new Error("Please login to continue");
+      }
+      if (response.status === 403) {
+        throw new Error("You don't have permission to delete lessons");
+      }
+      if (response.status === 404) {
+        throw new Error("Lesson not found");
+      }
+      if (!response.ok) {
+        throw new Error("Failed to delete lesson");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+      throw err;
     }
   };
 
-  return { deleteLesson };
+  return { deleteLesson, error };
 };

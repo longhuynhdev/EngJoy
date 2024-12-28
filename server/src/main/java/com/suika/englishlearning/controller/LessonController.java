@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,9 +27,11 @@ public class LessonController {
         return new ResponseEntity<>(lessonService.getLessons(), HttpStatus.OK);
     }
 
-    //Assigning questions to lesson
+    // Assigning questions to lesson
+    @PreAuthorize("hasAnyRole('ADMIN','CONTENT_EDITOR')")
     @PutMapping("/{lessonId}/questions")
-    public ResponseEntity<?> assignQuestionsToLesson(@PathVariable Integer lessonId, @RequestBody List<Integer> questionIds) {
+    public ResponseEntity<?> assignQuestionsToLesson(@PathVariable Integer lessonId,
+            @RequestBody List<Integer> questionIds) {
         try {
             lessonService.assignQuestionsToLesson(lessonId, questionIds);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -36,7 +39,6 @@ public class LessonController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<LessonDetailsDto> getLesson(@PathVariable Integer id) {
@@ -58,15 +60,17 @@ public class LessonController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','CONTENT_EDITOR')")
     @PostMapping
-    public ResponseEntity<?> createLesson(@RequestBody LessonRequestDto requestDto, String userName) {
+    public ResponseEntity<?> createLesson(@RequestBody LessonRequestDto requestDto) {
         try {
-            return new ResponseEntity<>(lessonService.createLesson(requestDto, userName), HttpStatus.CREATED);
+            return new ResponseEntity<>(lessonService.createLesson(requestDto), HttpStatus.CREATED);
         } catch (ResourceNotFoundException | IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','CONTENT_EDITOR')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateLesson(@PathVariable Integer id, @RequestBody LessonRequestDto requestDto) {
         try {
@@ -76,6 +80,7 @@ public class LessonController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLesson(@PathVariable Integer id) {
         try {

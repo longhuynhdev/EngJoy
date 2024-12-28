@@ -59,7 +59,15 @@ const TagsManagement = () => {
   // Delete category
   const handleDeleteCategory = async (name: string) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/category/deleteCategory/${name}`);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Authentication required");
+      }
+      await axios.delete(`http://localhost:8080/api/v1/category/deleteCategory/${name}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       fetchCategories(); // Refresh the list
     } catch (err) {
       alert(`Failed to delete category "${name}".`);
@@ -69,7 +77,15 @@ const TagsManagement = () => {
   // Delete difficulty
   const handleDeleteDifficulty = async (name: string) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/difficulty/deleteDifficulty/${name}`);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Authentication required");
+      }
+      await axios.delete(`http://localhost:8080/api/v1/difficulty/deleteDifficulty/${name}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       fetchDifficulties(); // Refresh the list
     } catch (err) {
       alert(`Failed to delete difficulty "${name}".`);

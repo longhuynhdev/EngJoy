@@ -10,28 +10,28 @@ export const useLogin = () => {
       const response = await fetch("http://localhost:8080/api/v1/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify(data),
       });
 
       if (response.ok) {
         const responseData = await response.json();
+        localStorage.setItem("token", responseData.token);
         localStorage.setItem("userInfo", JSON.stringify(responseData.user));
 
         const timeout = 1500;
         const userRole = responseData.user.role;
         const targetPath =
-          userRole === "USER"
-            ? "/"
-            : userRole === "ADMIN" || userRole === "CONTENT_EDITOR"
-            ? "/dashboard"
-            : "/";
+            userRole === "USER"
+                ? "/"
+                : userRole === "ADMIN" || userRole === "CONTENT_EDITOR"
+                    ? "/dashboard"
+                    : "/";
         const message =
-          userRole === "USER"
-            ? "home page"
-            : userRole === "ADMIN" || userRole === "CONTENT_EDITOR"
-            ? "dashboard page"
-            : "home page";
+            userRole === "USER"
+                ? "home page"
+                : userRole === "ADMIN" || userRole === "CONTENT_EDITOR"
+                    ? "dashboard page"
+                    : "home page";
 
         toast.success("Login successful!", {
           description: `Redirecting to ${message}...`,
@@ -65,10 +65,10 @@ export const useLogout = () => {
       // Call backend to clear session/cookies
       await fetch("http://localhost:8080/api/v1/auth/logout", {
         method: "POST",
-        credentials: "include", // important for cookies
       });
 
       // Clear local storage
+      localStorage.removeItem("token");
       localStorage.removeItem("userInfo");
 
       // Navigate to auth page

@@ -50,8 +50,7 @@ public class DifficultyService {
 
         String editDescription = difficultyDto.getDescription();
         if (editDescription != null &&
-                !editDescription.isEmpty() &&
-                !Objects.equals(difficulty.getDescription(), editDescription)) {
+                !editDescription.isEmpty()) {
             difficulty.setDescription(editDescription);
         }
         else {

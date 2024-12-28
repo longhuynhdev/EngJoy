@@ -11,11 +11,23 @@ function AddTag({ type }) {
       return;
     }
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Authentication required");
+      }
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
       if (type === "category") {
-        await axios.post("http://localhost:8080/api/v1/category/addCategory", newTag);
+        await axios.post("http://localhost:8080/api/v1/category/addCategory", newTag, config);
         alert("Category added successfully!");
       } else if (type === "difficulty") {
-        await axios.post("http://localhost:8080/api/v1/difficulty/addDifficulty", newTag);
+        await axios.post("http://localhost:8080/api/v1/difficulty/addDifficulty", newTag, config);
         alert("Difficulty added successfully!");
       }
       setNewTag({ name: "", description: "" }); // Clear input fields
