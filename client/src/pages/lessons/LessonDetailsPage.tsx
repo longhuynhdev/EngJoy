@@ -4,7 +4,7 @@ import { useLesson } from "@/hooks/useLessson";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { ErrorMessage } from "@/components/common/ErrorMessage";
 import { useNavigate } from "react-router-dom";
-import { QuizCard } from "@/components/QuizCard";
+import { QuestionSection } from "@/components/lessons/QuestionSection";
 const LessonDetailsPage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -49,8 +49,12 @@ const LessonDetailsPage = () => {
           className="prose prose-slate max-w-none dark:prose-invert prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-a:text-blue-600 hover:prose-a:text-blue-500 prose-img:rounded-lg"
           dangerouslySetInnerHTML={{ __html: lesson.body }}
         />
+
+        {/* Question Section */}
+        <div className="mt-12">
+          <QuestionSection questions={lesson.questions} />
+        </div>
       </article>
-      <QuizCard/>
     </div>
   );
 };

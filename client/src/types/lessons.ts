@@ -10,4 +10,18 @@ export interface Lesson {
   date: string;
   categories: string[];
   difficulties: string[];
+  questions: Question[];
 }
+export interface Question {
+  id: number;
+  question: string;
+  answers: Answer[];
+}
+
+export interface Answer {
+  answerId: number;
+  answer: string;
+  explanation: string;
+  correct: boolean;
+}
+

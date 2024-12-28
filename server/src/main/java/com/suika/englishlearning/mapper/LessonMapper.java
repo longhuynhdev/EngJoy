@@ -1,14 +1,12 @@
 package com.suika.englishlearning.mapper;
 
 import com.suika.englishlearning.exception.ResourceNotFoundException;
-import com.suika.englishlearning.model.Category;
-import com.suika.englishlearning.model.Difficulty;
-import com.suika.englishlearning.model.Lesson;
-import com.suika.englishlearning.model.UserEntity;
+import com.suika.englishlearning.model.*;
 import com.suika.englishlearning.model.dto.lesson.LessonDetailsDto;
 import com.suika.englishlearning.model.dto.lesson.LessonRequestDto;
 import com.suika.englishlearning.model.dto.lesson.LessonResponseDto;
 
+import com.suika.englishlearning.model.dto.question.QuestionDto;
 import com.suika.englishlearning.repository.CategoryRepository;
 import com.suika.englishlearning.repository.DifficultyRepository;
 import org.springframework.stereotype.Component;
@@ -20,10 +18,12 @@ import java.util.stream.Collectors;
 public class LessonMapper implements Mapper<Lesson, LessonResponseDto> {
         private final CategoryRepository categoryRepository;
         private final DifficultyRepository difficultyRepository;
+        private final AnswerMapper answerMapper;
 
-        public LessonMapper(CategoryRepository categoryRepository, DifficultyRepository difficultyRepository) {
+        public LessonMapper(CategoryRepository categoryRepository, DifficultyRepository difficultyRepository, AnswerMapper answerMapper) {
                 this.categoryRepository = categoryRepository;
                 this.difficultyRepository = difficultyRepository;
+                this.answerMapper = answerMapper;
         }
 
         @Override
@@ -87,6 +87,18 @@ public class LessonMapper implements Mapper<Lesson, LessonResponseDto> {
                 return lesson;
         }
 
+        public QuestionDto toQuestionDto(Question question) {
+                QuestionDto dto = new QuestionDto();
+                dto.setId(question.getId());
+                dto.setQuestion(question.getQuestion());
+                dto.setAnswers(answerMapper.toAnswerDtoList(question.getAnswers()));
+                return dto;
+        }
+
+        public List<QuestionDto> toQuestionDtoList(List<Question> questions) {
+                return questions.stream().map(this::toQuestionDto).collect(Collectors.toList());
+        }
+
         public LessonDetailsDto toDtoDetails(Lesson entity) {
                 LessonDetailsDto dto = new LessonDetailsDto();
                 dto.setId(entity.getId());
@@ -103,7 +115,7 @@ public class LessonMapper implements Mapper<Lesson, LessonResponseDto> {
                         .map(Difficulty::getName)
                         .collect(Collectors.toList()));
                 dto.setBody(entity.getBody());
-                dto.setQuestions(entity.getQuestions());
+                dto.setQuestions(toQuestionDtoList(entity.getQuestions()));
                 return dto;
         }
 }
