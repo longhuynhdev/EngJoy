@@ -2,7 +2,6 @@ package com.suika.englishlearning.controller;
 
 import com.suika.englishlearning.model.dto.email.EmailDetails;
 import com.suika.englishlearning.service.EmailService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

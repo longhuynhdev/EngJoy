@@ -11,7 +11,6 @@ import com.suika.englishlearning.model.dto.question.QuestionResultDto;
 import com.suika.englishlearning.model.dto.quiz.*;
 import com.suika.englishlearning.repository.*;
 import org.antlr.v4.runtime.misc.Pair;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

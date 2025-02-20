@@ -7,7 +7,6 @@ import com.suika.englishlearning.mapper.QuestionMapper;
 import com.suika.englishlearning.model.dto.quiz.*;
 import com.suika.englishlearning.service.QuizService;
 import org.antlr.v4.runtime.misc.Pair;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -1,4 +1,4 @@
-import logo from "../../img/logo_horizontal.png";
+import logo from "../../img/logo.png";
 import { Link } from "react-router-dom";
 import AvatarDropdownMenu from "../common/AvatarDropdownMenu";
 const Navbar = () => {

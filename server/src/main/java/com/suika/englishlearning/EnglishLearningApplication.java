@@ -18,6 +18,7 @@ public class EnglishLearningApplication implements CommandLineRunner {
     private final RoleRepository roleRepository;
     private final CategoryRepository categoryRepository;
     private final DifficultyRepository difficultyRepository;
+    
     public EnglishLearningApplication(RoleRepository roleRepository, CategoryRepository categoryRepository, DifficultyRepository difficultyRepository) {
         this.roleRepository = roleRepository;
         this.categoryRepository = categoryRepository;

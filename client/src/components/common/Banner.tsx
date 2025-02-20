@@ -1,6 +1,6 @@
 interface BannerProps {
   title: string;
-  description: string;
+  description: string | React.ReactElement;
   height?: string;
   width?: string;
   backgroundUrl?: string;

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import logo from "../../img/Frame 30.png";
-import { Facebook, Instagram, Twitter, PhoneCall, Mail } from "lucide-react";
+import logo from "../../img/logo.png";
+import { PhoneCall, Mail } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -93,17 +93,12 @@ const Footer = () => {
     </div>
   </div>
 
-  {/* Social Media Section */}
-  <div className="flex items-center justify-between pt-6 mt-10 border-t border-gray-700">
-    <div className="flex gap-4 mx-auto text-gray-400">
-      <Facebook className="cursor-pointer hover:text-white" />
-      <Twitter className="cursor-pointer hover:text-white" />
-      <Instagram className="cursor-pointer hover:text-white" />
-    </div>
+  {/* Copyright Section */}
+<div className="flex items-center justify-center pt-6 mt-10 border-t border-gray-700">
     <p className="text-sm text-gray-400">
-      © 2024. JoyEng Ltd. All rights reserved.
+      © 2025. JoyEng Ltd. All rights reserved.
     </p>
-  </div>
+</div>
 
 </footer>
 
