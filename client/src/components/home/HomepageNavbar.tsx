@@ -7,9 +7,9 @@ const HomepageNavbar = () => {
       <Link to="/" className="flex items-center gap-2">
         <img
           src={logo}
-          width={70}
+          width={55}
           height={25}
-          alt="JoyEng logo"
+          alt="EngJoy logo"
           className="rounded-lg object-contain"
         ></img>
       </Link>

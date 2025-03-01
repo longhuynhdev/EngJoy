@@ -5,34 +5,27 @@ import "./App.css";
 import HomeLayout from "./layouts/HomeLayout";
 import HomePage from "./pages/home/HomePage";
 
-//Dashboard
+//***Dashboard Area***
 import DashboardLayout from "./layouts/DashboardLayout";
 import DashBoardPage from "./pages/dashboard/DashboardPage";
-//Dashboard - User
+//  User
 import UserTableView from "./pages/dashboard/user/userTableView";
-//import UserManagementForm from "./pages/dashboard/user/UserManagementForm";
-// Dashboard - Lessons
+//  Lessons
 import AdminLessonsPage from "./pages/dashboard/lessons/AdminLessonPage";
 import AddLessonPage from "./pages/dashboard/lessons/AddLessonPage";
 import EditLessonPage from "./pages/dashboard/lessons/EditLessonPage";
 import AssignQuestionPage from "./pages/dashboard/questions/AssignQuestionsPage.tsx";
-//Dashboard - Quizzes
-import QuizzesPage from "./pages/quiz/QuizzesPage";
-import StartTakingQuizPage from "./pages/quiz/startTakingQuizPage";
-import TakingQuizPage from "./pages/quiz/TakingQuiz";
-import ResultQuizPage from "./pages/quiz/ResultQuizPage";
-import AdminQuizPage from "./pages/dashboard/quiz/AdminQuizPage";
-import AddQuizPage from "./pages/dashboard/quiz/AddQuizPage";
-//import EditQuizPage from "./pages/dashboard/quiz/EditQuizPage";
-
-// Dashboard - Tags
+//  Tags
 import CategoriesManagement from "./pages/dashboard/categories/TagsManagement";
 import AddTag from "./pages/dashboard/categories/AddTag";
 import EditTag from "./pages/dashboard/categories/EditTag";
-// Dashboard - Questions
+// Questions
 import AdminQuestionPage from "@/pages/dashboard/questions/AdminQuestionPage.tsx";
 import AddQuestionPage from "@/pages/dashboard/questions/AddQuestionPage.tsx";
 import EditQuestionPage from "@/pages/dashboard/questions/EditQuestionPage.tsx";
+
+//***End of dashboard area
+
 // Auth
 import AuthLayout from "./layouts/AuthLayout";
 import AuthPage from "./pages/auth/AuthPage";
@@ -62,19 +55,11 @@ function App() {
 
         </Route>
 
-        {/* Quizzes */}
-        <Route element={<HomeLayout />}>
-          <Route path="quizzes" element={<QuizzesPage />} />
-          <Route path="quizzes/:id/start" element={<StartTakingQuizPage />} />
-          <Route path="quizzes/:id/taking" element={<TakingQuizPage />} />
-          <Route path="quizzes/:id/result" element={<ResultQuizPage />} />
-        </Route>
 
         {/* Dashboard routes */}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashBoardPage />} />
           <Route path="users" element={<UserTableView />} />
-          {/* <Route path="users/user-management/:userEmail" element={<UserManagementForm />} /> */}
           <Route path="lessons" element={<AdminLessonsPage />} />
           <Route path="lessons/add" element={<AddLessonPage />} />
           <Route path="lessons/edit/:id" element={<EditLessonPage />} />
@@ -96,10 +81,7 @@ function App() {
             path="tags/editDifficulty/:name"
             element={<EditTag type="difficulty" />}
           />
-          <Route path="quizzes" element={<AdminQuizPage />} />
-          <Route path="quizzes/add" element={<AddQuizPage />} />
 
-          {/*<Route path="questions/edit/:id" element={<EditQuizPage />} />*/}
         </Route>
 
         {/* Auth routes */}
