@@ -7,7 +7,7 @@ import {
   User,
   MessageCircleQuestion,
 } from "lucide-react";
-import DashboardCard from "@/components/dashboard/DashBoardCard";
+import DashboardCard from "@/components/dashboard/DashboardCard";
 import LessonsTable from "@/components/lessons/LessonsTable";
 import { useLessons } from "@/hooks/useLesssons";
 

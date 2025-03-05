@@ -23,7 +23,7 @@ import {
 
 import { Link } from "react-router-dom";
 
-const Sidebar = () => {
+const DashboardSidebar = () => {
   return (
     <Command className="rounded-none bg-secondary">
       <CommandInput placeholder="Type a command or search..." />
@@ -84,4 +84,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default DashboardSidebar;

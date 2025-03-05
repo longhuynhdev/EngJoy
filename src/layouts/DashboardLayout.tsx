@@ -1,15 +1,15 @@
-import Navbar from "@/components/dashboard/Navbar";
-import Sidebar from "@/components/dashboard/Sidebar";
+import DashboardNavbar from "@/components/dashboard/DashboardNavbar";
+import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import { Outlet } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 
 const DashboardLayout = () => {
   return (
     <>
-      <Navbar />
+      <DashboardNavbar />
       <div className="flex">
         <div className="hidden md:block min-h-screen w-[300px]">
-          <Sidebar />
+          <DashboardSidebar />
         </div>
         <div className="p-5 w-full md:max-w-[1400px]">
           <Outlet />

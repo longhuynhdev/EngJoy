@@ -15,7 +15,7 @@ const HomePage = () => {
             </span>
           </Link>
         }
-        height="34rem"
+        height="41rem"
         backgroundUrl={bannerImage}
       />
     </div>

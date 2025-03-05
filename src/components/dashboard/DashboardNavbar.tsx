@@ -1,7 +1,7 @@
 import logo from "../../img/logo.png";
 import { Link } from "react-router-dom";
 import AvatarDropdownMenu from "../common/AvatarDropdownMenu";
-const Navbar = () => {
+const DashboardNavbar = () => {
   return (
     <div className="bg-[#E2E8F0] dark:bg-slate-700 text-white px-5 flex justify-between">
       <Link to="/" className="flex items-center gap-2">
@@ -12,4 +12,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default DashboardNavbar;
