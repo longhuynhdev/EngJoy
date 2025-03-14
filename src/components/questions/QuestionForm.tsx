@@ -47,6 +47,7 @@ export function QuestionForm({ initialData, onSubmit }: QuestionFormProps) {
       answers: [
         { answer: "", explanation: "", correct: false },
         { answer: "", explanation: "", correct: false },
+        { answer: "", explanation: "", correct: false },
       ],
     },
   })
